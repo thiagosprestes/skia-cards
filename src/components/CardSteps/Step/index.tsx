@@ -6,7 +6,7 @@ export enum CardStep {
   number = "number",
   expiration = "expiration",
   holder = "holder",
-  security = "security",
+  securityCode = "securityCode",
 }
 
 interface StepProps {
@@ -20,7 +20,7 @@ export const Step = ({ onChangeInput, step, inputValue }: StepProps) => {
     [CardStep.number]: "Número do cartão",
     [CardStep.expiration]: "Data de expiração",
     [CardStep.holder]: "Nome do portador",
-    [CardStep.security]: "Código de segurança",
+    [CardStep.securityCode]: "Código de segurança",
   }[step];
 
   return (

@@ -1,11 +1,6 @@
 import React, { useContext } from "react";
 import { TouchableWithoutFeedback, View } from "react-native";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { Card } from "../../components/Card";
 import { CardBack } from "../../components/Card/CardBack";
 import { CardFront } from "../../components/Card/CardFront";
@@ -14,72 +9,38 @@ import { CardContext, CardContextProps } from "../../contexts/card";
 import { styles } from "./styles";
 
 export const Home = () => {
-  const { number, expiration, holder } = useContext(
+  const { card, cardFrontPosition, cardBackPosition, flipCard } = useContext(
     CardContext
   ) as CardContextProps;
 
-  const rotate = useSharedValue("0deg");
-  const rotate2 = useSharedValue("90deg");
+  const { number, expiration, holder } = card;
 
-  const rotateStyle = useAnimatedStyle(() => {
+  const flipFront = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          rotateY: rotate.value,
+          rotateY: cardFrontPosition.value,
         },
       ],
     };
   });
 
-  const rotateStyled = useAnimatedStyle(() => {
+  const flipBack = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          rotateY: rotate2.value,
+          rotateY: cardBackPosition.value,
         },
         { scaleX: -1 },
       ],
     };
   });
 
-  const flip = () => {
-    if (rotate.value === "90deg") {
-      rotate2.value = withTiming(
-        "90deg",
-        {
-          duration: 200,
-          easing: Easing.linear,
-        },
-        (a) => {
-          rotate.value = withTiming("0deg", {
-            duration: 200,
-            easing: Easing.linear,
-          });
-        }
-      );
-      return;
-    }
-
-    rotate.value = withTiming(
-      "90deg",
-      {
-        duration: 200,
-        easing: Easing.linear,
-      },
-      (a) => {
-        rotate2.value = withTiming("180deg", {
-          duration: 200,
-          easing: Easing.linear,
-        });
-      }
-    );
-  };
-
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={flip}>
+      <TouchableWithoutFeedback onPress={flipCard}>
         <View style={styles.cardContainer}>
-          <Animated.View style={[rotateStyle]}>
+          <Animated.View style={flipFront}>
             <Card>
               <CardFront
                 cardNumber={number}
@@ -88,7 +49,7 @@ export const Home = () => {
               />
             </Card>
           </Animated.View>
-          <Animated.View style={[rotateStyled, { position: "absolute" }]}>
+          <Animated.View style={[flipBack, { position: "absolute" }]}>
             <Card>
               <CardBack />
             </Card>
