@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import React, { useContext } from "react";
+import { TouchableWithoutFeedback, View } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -17,13 +10,13 @@ import { Card } from "../../components/Card";
 import { CardBack } from "../../components/Card/CardBack";
 import { CardFront } from "../../components/Card/CardFront";
 import { CardSteps } from "../../components/CardSteps";
+import { CardContext, CardContextProps } from "../../contexts/card";
 import { styles } from "./styles";
 
 export const Home = () => {
-  const [cardNumber, setCardNumber] = useState(0);
-  const [cardExpiration, setCardExpiration] = useState("00/00");
-  const [cardHolder, setCardHolder] = useState("NOME");
-  const [cardSecurityCode, setCardSecurityCode] = useState(0);
+  const { number, expiration, holder } = useContext(
+    CardContext
+  ) as CardContextProps;
 
   const rotate = useSharedValue("0deg");
   const rotate2 = useSharedValue("90deg");
@@ -89,9 +82,9 @@ export const Home = () => {
           <Animated.View style={[rotateStyle]}>
             <Card>
               <CardFront
-                cardNumber={cardNumber}
-                cardExpiration={cardExpiration}
-                cardHolder={cardHolder}
+                cardNumber={number}
+                cardExpiration={expiration}
+                cardHolder={holder}
               />
             </Card>
           </Animated.View>
@@ -102,7 +95,6 @@ export const Home = () => {
           </Animated.View>
         </View>
       </TouchableWithoutFeedback>
-
       <CardSteps />
     </View>
   );

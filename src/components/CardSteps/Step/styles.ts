@@ -9,14 +9,16 @@ export const styles = StyleSheet.create({
   },
   text: {
     color: "#fff",
-    fontWeight: "bold",
     fontSize: 18,
+    fontFamily: "Roboto_700Bold",
   },
   input: {
     backgroundColor: "#303030",
     borderRadius: 8,
     padding: 10,
     marginTop: 16,
+    fontFamily: "Roboto_400Regular",
+    color: "#fff",
   },
   button: {
     backgroundColor: "#0EB14B",
@@ -25,8 +27,8 @@ export const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontWeight: "bold",
     fontSize: 18,
     textAlign: "center",
+    fontFamily: "Roboto_700Bold",
   },
 });
