@@ -1,5 +1,6 @@
 import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
+import { TextInputMask, TextInputMaskTypeProp } from "react-native-masked-text";
 import { styles } from "./styles";
 
 export enum CardStep {
@@ -23,15 +24,37 @@ export const Step = ({ onChangeInput, step, inputValue }: StepProps) => {
     [CardStep.securityCode]: "Código de segurança",
   }[step];
 
+  const renderInput = (type: TextInputMaskTypeProp) => (
+    <TextInputMask
+      type={type}
+      style={styles.input}
+      onChangeText={(text) => onChangeInput(text)}
+      value={inputValue}
+      options={{
+        format: "MM/YY",
+      }}
+      maxLength={type === "only-numbers" ? 3 : undefined}
+    />
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Text style={styles.text}>{stepName}</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => onChangeInput(text)}
-          value={inputValue}
-        />
+        {
+          {
+            [CardStep.number]: renderInput("credit-card"),
+            [CardStep.expiration]: renderInput("datetime"),
+            [CardStep.holder]: (
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => onChangeInput(text.toUpperCase())}
+                value={inputValue}
+              />
+            ),
+            [CardStep.securityCode]: renderInput("only-numbers"),
+          }[step]
+        }
       </View>
     </View>
   );

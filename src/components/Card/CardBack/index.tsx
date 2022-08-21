@@ -1,9 +1,20 @@
 import React from "react";
-import { Group, Text, useFont } from "@shopify/react-native-skia";
+import {
+  Group,
+  Rect,
+  RoundedRect,
+  Text,
+  useFont,
+} from "@shopify/react-native-skia";
 import RobotoBold from "../../../assets/Roboto-Bold.ttf";
+import { Dimensions } from "react-native";
 
-export const CardBack = () => {
-  const height = 200;
+interface CardBackProps {
+  securityCode?: number;
+}
+
+export const CardBack = ({ securityCode }: CardBackProps) => {
+  const width = Dimensions.get("window").width - 36;
 
   const fontBold = useFont(RobotoBold, 16);
 
@@ -11,15 +22,15 @@ export const CardBack = () => {
 
   return (
     <Group>
+      <Rect x={0} y={16} width={width} height={60} color="#000" />
+      <RoundedRect x={16} y={90} width={170} height={25} color="#fff" r={2} />
       <Text
-        x={20}
-        y={100}
-        text="0000 0000 0000 0000 0000"
+        x={150}
+        y={108}
+        text={securityCode ? String(securityCode) : "100"}
         font={fontBold}
-        color="#fff"
+        color="#000"
       />
-      <Text x={20} y={height - 25} text="08/30" font={fontBold} color="#fff" />
-      <Text x={100} y={height - 25} text="888" font={fontBold} color="#fff" />
     </Group>
   );
 };

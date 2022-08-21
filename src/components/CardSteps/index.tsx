@@ -8,7 +8,7 @@ export const CardSteps = () => {
   const { setCardFieldValue, clearCardData, changeStep, step, card } =
     useContext(CardContext) as CardContextProps;
 
-  const isNextButtonDisabled = !card[step];
+  const isNextButtonDisabled = !card[step] || String(card[step]).length < 14;
 
   const handleOnNextStep = () => {
     switch (step) {
@@ -49,6 +49,13 @@ export const CardSteps = () => {
       >
         <Text style={styles.buttonText}>Próxima etapa</Text>
       </TouchableOpacity>
+      {step !== CardStep.number && (
+        <TouchableOpacity style={[styles.button, styles.previousButton]}>
+          <Text style={[styles.buttonText, styles.previousButtonText]}>
+            Etapa anterior
+          </Text>
+        </TouchableOpacity>
+      )}
     </>
   );
 };
