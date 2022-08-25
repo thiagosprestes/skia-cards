@@ -107,7 +107,10 @@ export const CardProvider = ({ children }: CardProps) => {
   };
 
   const setCardFieldValue = ({ step, value }: setCardFieldValueProps) => {
-    setCard((oldState) => ({ ...oldState, [step]: value }));
+    setCard((oldState) => ({
+      ...oldState,
+      [step]: value,
+    }));
 
     if (step === CardStep.securityCode) {
       flipCardToBack();

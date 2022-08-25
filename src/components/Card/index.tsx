@@ -8,15 +8,12 @@ import {
   vec,
 } from "@shopify/react-native-skia";
 import { Dimensions } from "react-native";
-
-export enum CardBrand {
-  DEFAULT = "default",
-  AMEX = "amex",
-  MASTERCARD = "mastercard",
-  VISA = "visa",
-  ELO = "elo",
-  HIPERCARD = "hipercard",
-}
+import visa from "../../assets/brands/visa.png";
+import amex from "../../assets/brands/amex.png";
+import mastercard from "../../assets/brands/mastercard.png";
+import elo from "../../assets/brands/elo.png";
+import hipercard from "../../assets/brands/hipercard.png";
+import { CardBrand, cardBrandsColors } from "../../utils/cardBrands";
 
 interface CardProps {
   children: React.ReactElement;
@@ -24,24 +21,22 @@ interface CardProps {
 }
 
 export const Card = ({ children, cardBrand }: CardProps) => {
-  const visaLogo = useImage(require("../../assets/brands/visa.png"));
-  const amexLogo = useImage(require("../../assets/brands/amex.png"));
-  const mastercardLogo = useImage(
-    require("../../assets/brands/mastercard.png")
-  );
-  const eloLogo = useImage(require("../../assets/brands/elo.png"));
-  const hipercardLogo = useImage(require("../../assets/brands/hipercard.png"));
-
   const width = Dimensions.get("window").width - 36;
   const height = 200;
 
+  const visaLogo = useImage(visa);
+  const amexLogo = useImage(amex);
+  const mastercardLogo = useImage(mastercard);
+  const hipercardLogo = useImage(hipercard);
+  const eloLogo = useImage(elo);
+
   const cardData = {
-    amex: { colors: ["#86D8B5", "#449E79"], logo: amexLogo },
-    visa: { colors: ["#122D96", "#1A1E5D"], logo: visaLogo },
-    mastercard: { colors: ["#F7A02D", "#F58627"], logo: mastercardLogo },
-    elo: { colors: ["#88847E", "#38322E"], logo: eloLogo },
-    hipercard: { colors: ["#C21D22", "#9A171B"], logo: hipercardLogo },
-    default: { colors: ["#3e4141", "#202323"], logo: undefined },
+    default: { colors: cardBrandsColors.default, logo: undefined },
+    amex: { colors: cardBrandsColors.amex, logo: amexLogo },
+    visa: { colors: cardBrandsColors.visa, logo: visaLogo },
+    mastercard: { colors: cardBrandsColors.mastercard, logo: mastercardLogo },
+    elo: { colors: cardBrandsColors.elo, logo: eloLogo },
+    hipercard: { colors: cardBrandsColors.hipercard, logo: hipercardLogo },
   };
 
   return (

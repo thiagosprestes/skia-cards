@@ -48,8 +48,9 @@ export const Step = ({ onChangeInput, step, inputValue }: StepProps) => {
             [CardStep.holder]: (
               <TextInput
                 style={styles.input}
-                onChangeText={(text) => onChangeInput(text.toUpperCase())}
+                onChangeText={(text) => onChangeInput(text)}
                 value={inputValue}
+                maxLength={23}
               />
             ),
             [CardStep.securityCode]: renderInput("only-numbers"),

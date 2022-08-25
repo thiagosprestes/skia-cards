@@ -1,30 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TouchableWithoutFeedback, View } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
-import { Card, CardBrand } from "../../components/Card";
+import { Card } from "../../components/Card";
 import { CardBack } from "../../components/Card/CardBack";
 import { CardFront } from "../../components/Card/CardFront";
 import { CardSteps } from "../../components/CardSteps";
 import { CardContext, CardContextProps } from "../../contexts/card";
+import { CardBrand, getCardBrand } from "../../utils/cardBrands";
 import { styles } from "./styles";
 
 export const Home = () => {
-  const [cardBrand, setCardBrand] = useState(CardBrand.DEFAULT);
+  const [cardBrand, setCardBrand] = useState(CardBrand.default);
 
-  const { card, cardFrontPosition, cardBackPosition, flipCard } = useContext(
-    CardContext
-  ) as CardContextProps;
+  const { card, cardFrontPosition, cardBackPosition, flipCard, step } =
+    useContext(CardContext) as CardContextProps;
 
   const { number, expiration, holder, securityCode } = card;
-
-  const cardNumberToString = String(number);
-
-  const getCardColor = {
-    "3": CardBrand.AMEX,
-    "4": CardBrand.VISA,
-    "5": CardBrand.MASTERCARD,
-    "6": CardBrand.HIPERCARD,
-  }[cardNumberToString.charAt(0)];
 
   const flipFront = useAnimatedStyle(() => {
     return {
@@ -48,20 +39,14 @@ export const Home = () => {
   });
 
   useEffect(() => {
-    if (
-      cardNumberToString.length >= 2 &&
-      cardNumberToString.slice(0, 2) === "50"
-    ) {
-      setCardBrand(CardBrand.ELO);
+    const brand = getCardBrand(number!);
+
+    if (brand) {
+      setCardBrand(CardBrand[brand]);
       return;
     }
 
-    if (cardNumberToString.length >= 2) {
-      setCardBrand(getCardColor ?? CardBrand.DEFAULT);
-      return;
-    }
-
-    setCardBrand(CardBrand.DEFAULT);
+    setCardBrand(CardBrand.default);
   }, [number]);
 
   return (
@@ -74,6 +59,7 @@ export const Home = () => {
                 cardNumber={number}
                 cardExpiration={expiration}
                 cardHolder={holder}
+                step={step}
               />
             </Card>
           </Animated.View>

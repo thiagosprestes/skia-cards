@@ -8,7 +8,7 @@ export const CardSteps = () => {
   const { setCardFieldValue, clearCardData, changeStep, step, card } =
     useContext(CardContext) as CardContextProps;
 
-  const isNextButtonDisabled = !card[step] || String(card[step]).length < 14;
+  const isNextButtonDisabled = !card[step];
 
   const handleOnNextStep = () => {
     switch (step) {
@@ -25,6 +25,22 @@ export const CardSteps = () => {
         Keyboard.dismiss();
         Alert.alert("Cartão cadastrado com sucesso");
         clearCardData();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleOnPreviousStep = () => {
+    switch (step) {
+      case CardStep.expiration:
+        changeStep(CardStep.number);
+        break;
+      case CardStep.holder:
+        changeStep(CardStep.expiration);
+        break;
+      case CardStep.securityCode:
+        changeStep(CardStep.holder);
         break;
       default:
         break;
@@ -50,7 +66,10 @@ export const CardSteps = () => {
         <Text style={styles.buttonText}>Próxima etapa</Text>
       </TouchableOpacity>
       {step !== CardStep.number && (
-        <TouchableOpacity style={[styles.button, styles.previousButton]}>
+        <TouchableOpacity
+          style={[styles.button, styles.previousButton]}
+          onPress={handleOnPreviousStep}
+        >
           <Text style={[styles.buttonText, styles.previousButtonText]}>
             Etapa anterior
           </Text>
