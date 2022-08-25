@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -6,9 +6,9 @@ export const styles = StyleSheet.create({
     backgroundColor: "#000",
     paddingHorizontal: 20,
     paddingBottom: 20,
+    paddingTop: StatusBar.currentHeight,
   },
   cardContainer: {
-    marginTop: 90,
     marginBottom: 40,
     alignItems: "center",
   },

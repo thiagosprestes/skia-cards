@@ -8,6 +8,7 @@ import {
 import { ActivityIndicator } from "react-native";
 import { Home } from "./src/screens/Home";
 import { CardProvider } from "./src/contexts/card";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -20,11 +21,11 @@ export default function App() {
   }
 
   return (
-    <>
-      <StatusBar style="light" backgroundColor="#000" />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar style="light" backgroundColor="transparent" translucent />
       <CardProvider>
         <Home />
       </CardProvider>
-    </>
+    </GestureHandlerRootView>
   );
 }
