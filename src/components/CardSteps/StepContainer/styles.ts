@@ -1,11 +1,9 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  inputContainer: {
-    flex: 1,
+    marginTop: 20,
   },
   text: {
     color: "#fff",
@@ -32,3 +30,5 @@ export const styles = StyleSheet.create({
     fontFamily: "Roboto_700Bold",
   },
 });
+
+export default styles;

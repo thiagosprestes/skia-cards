@@ -5,11 +5,17 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { CardStep } from "../components/CardSteps/Step";
 
 export enum CardPosition {
   FRONT = "front",
   BACK = "back",
+}
+
+export enum CardStep {
+  number = "number",
+  expiration = "expiration",
+  holder = "holder",
+  securityCode = "securityCode",
 }
 
 interface Card {

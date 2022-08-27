@@ -1,7 +1,7 @@
 import React from "react";
 import { Group, Rect, Text, useFont } from "@shopify/react-native-skia";
 import RobotoBold from "../../../assets/Roboto-Bold.ttf";
-import { CardStep } from "../../CardSteps/Step";
+import { CardStep } from "../../../contexts/card";
 
 interface CardFront {
   cardNumber?: number;

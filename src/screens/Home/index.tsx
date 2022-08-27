@@ -11,10 +11,10 @@ import Animated, {
 import { Card } from "../../components/Card";
 import { CardBack } from "../../components/Card/CardBack";
 import { CardFront } from "../../components/Card/CardFront";
-import { CardSteps } from "../../components/CardSteps";
+import { StepContainer } from "../../components/CardSteps/StepContainer";
 import { CardContext, CardContextProps } from "../../contexts/card";
 import { CardBrand, getCardBrand } from "../../utils/cardBrands";
-import { styles } from "./styles";
+import styles from "./styles";
 
 export const Home = () => {
   const [cardBrand, setCardBrand] = useState(CardBrand.default);
@@ -117,7 +117,7 @@ export const Home = () => {
           </Animated.View>
         </TouchableWithoutFeedback>
       </GestureDetector>
-      <CardSteps />
+      <StepContainer />
     </View>
   );
 };

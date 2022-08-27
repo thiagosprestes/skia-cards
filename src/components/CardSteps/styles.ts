@@ -1,6 +1,22 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  text: {
+    color: "#fff",
+    fontSize: 18,
+    fontFamily: "Roboto_700Bold",
+  },
+  input: {
+    backgroundColor: "#303030",
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 16,
+    fontFamily: "Roboto_400Regular",
+    color: "#fff",
+  },
   button: {
     backgroundColor: "#fff",
     padding: 12,
@@ -24,4 +40,13 @@ export const styles = StyleSheet.create({
   previousButtonText: {
     color: "#fff",
   },
+  errorText: {
+    color: "#fff",
+    fontSize: 14,
+    textAlign: "center",
+    fontFamily: "Roboto_700Bold",
+    marginTop: 10,
+  },
 });
+
+export default styles;
