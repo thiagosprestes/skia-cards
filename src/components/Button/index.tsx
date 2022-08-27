@@ -15,8 +15,7 @@ interface ButtonProps {
 }
 
 export const Button = ({ onPress, text, type }: ButtonProps) => {
-  const isButtonTypeContained =
-    type === ButtonType.contained ? styles.contained : styles.outlined;
+  const isButtonTypeContained = type === ButtonType.contained;
 
   return (
     <TouchableOpacity

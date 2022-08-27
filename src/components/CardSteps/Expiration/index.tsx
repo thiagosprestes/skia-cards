@@ -30,6 +30,8 @@ export const Expiration = () => {
     },
   });
 
+  const onGoToPreviousStep = () => changeStep(CardStep.number);
+
   return (
     <>
       <View style={styles.container}>
@@ -63,6 +65,11 @@ export const Expiration = () => {
           <Text style={stepStyles.errorText}>Campo obrigatório</Text>
         )}
       </View>
+      <Button
+        text="Etapa anterior"
+        onPress={onGoToPreviousStep}
+        type={ButtonType.outlined}
+      />
       <Button
         text="Próxima etapa"
         onPress={handleSubmit(() => changeStep(CardStep.holder))}

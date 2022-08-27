@@ -15,7 +15,7 @@ interface FormData {
 }
 
 export const SecurityCode = () => {
-  const { setCardFieldValue, clearCardData } = useContext(
+  const { changeStep, clearCardData, setCardFieldValue } = useContext(
     CardContext
   ) as CardContextProps;
 
@@ -34,6 +34,8 @@ export const SecurityCode = () => {
     Alert.alert("Cartão cadastrado com sucesso");
     clearCardData();
   });
+
+  const onGoToPreviousStep = () => changeStep(CardStep.expiration);
 
   return (
     <>
@@ -66,6 +68,11 @@ export const SecurityCode = () => {
           <Text style={styles.errorText}>Campo obrigatório</Text>
         )}
       </View>
+      <Button
+        text="Etapa anterior"
+        onPress={onGoToPreviousStep}
+        type={ButtonType.outlined}
+      />
       <Button
         text="Próxima etapa"
         onPress={onSubmit}
