@@ -17,7 +17,7 @@ interface FormData {
 }
 
 export const Number = ({}: NumberProps) => {
-  const { setCardFieldValue, changeStep } = useContext(
+  const { setCardFieldValue, changeStep, card } = useContext(
     CardContext
   ) as CardContextProps;
 
@@ -27,7 +27,7 @@ export const Number = ({}: NumberProps) => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      number: "",
+      number: card.number ? String(card.number) : "",
     },
   });
 

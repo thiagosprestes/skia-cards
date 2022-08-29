@@ -16,21 +16,54 @@ interface FormData {
 }
 
 export const Expiration = () => {
-  const { setCardFieldValue, changeStep } = useContext(
+  const { setCardFieldValue, changeStep, card } = useContext(
     CardContext
   ) as CardContextProps;
 
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      expirationDate: "",
+      expirationDate: card.expiration,
     },
   });
 
   const onGoToPreviousStep = () => changeStep(CardStep.number);
+
+  const onGoToNextStep = () => {
+    const currentYear = Number(new Date().getFullYear().toString().slice(2, 4));
+    const currentMonth = Number((new Date().getMonth() + 1).toString());
+
+    const splittedExpiration = card.expiration?.split("/");
+
+    const expirationMonth = Number(splittedExpiration![0]);
+    const expirationYear = Number(splittedExpiration![1]);
+
+    const isValidMonth = expirationMonth >= 1 && expirationMonth <= 12;
+
+    const isExpirationYearValid = expirationYear >= currentYear;
+
+    const isExpired = !isExpirationYearValid || currentMonth >= expirationMonth;
+
+    if (!isValidMonth) {
+      setError("expirationDate", {
+        message: "Insira uma data de expiração válida",
+      });
+      return;
+    }
+
+    if (isExpired) {
+      setError("expirationDate", {
+        message: "Cartão já expirado",
+      });
+      return;
+    }
+
+    changeStep(CardStep.holder);
+  };
 
   return (
     <>
@@ -60,9 +93,10 @@ export const Expiration = () => {
           )}
           name="expirationDate"
         />
-
         {errors.expirationDate && (
-          <Text style={stepStyles.errorText}>Campo obrigatório</Text>
+          <Text style={stepStyles.errorText}>
+            {errors.expirationDate.message}
+          </Text>
         )}
       </View>
       <Button
@@ -72,7 +106,7 @@ export const Expiration = () => {
       />
       <Button
         text="Próxima etapa"
-        onPress={handleSubmit(() => changeStep(CardStep.holder))}
+        onPress={handleSubmit(onGoToNextStep)}
         type={ButtonType.contained}
       />
     </>

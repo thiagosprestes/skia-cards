@@ -14,9 +14,11 @@ interface FormData {
 }
 
 export const Holder = () => {
-  const { setCardFieldValue, changeStep } = useContext(
-    CardContext
-  ) as CardContextProps;
+  const {
+    setCardFieldValue,
+    changeStep,
+    card: { holder },
+  } = useContext(CardContext) as CardContextProps;
 
   const {
     control,
@@ -24,7 +26,7 @@ export const Holder = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      holder: "",
+      holder,
     },
   });
 

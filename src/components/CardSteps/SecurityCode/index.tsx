@@ -15,7 +15,7 @@ interface FormData {
 }
 
 export const SecurityCode = () => {
-  const { changeStep, clearCardData, setCardFieldValue } = useContext(
+  const { changeStep, clearCardData, setCardFieldValue, card } = useContext(
     CardContext
   ) as CardContextProps;
 
@@ -25,7 +25,7 @@ export const SecurityCode = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      securityCode: "",
+      securityCode: card.securityCode ? String(card.securityCode) : "",
     },
   });
 
