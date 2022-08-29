@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Canvas,
   Image,
   LinearGradient,
   RoundedRect,
   useImage,
+  useSharedValueEffect,
+  useValue,
   vec,
 } from "@shopify/react-native-skia";
 import { Dimensions } from "react-native";
@@ -14,6 +16,7 @@ import mastercard from "../../assets/brands/mastercard.png";
 import elo from "../../assets/brands/elo.png";
 import hipercard from "../../assets/brands/hipercard.png";
 import { CardBrand, cardBrandsColors } from "../../utils/cardBrands";
+import { useSharedValue, withTiming } from "react-native-reanimated";
 
 interface CardProps {
   children: React.ReactElement;
@@ -39,10 +42,58 @@ export const Card = ({ children, cardBrand }: CardProps) => {
     hipercard: { colors: cardBrandsColors.hipercard, logo: hipercardLogo },
   };
 
+  const cardOpacity = useValue(0);
+  const logoOpacity = useValue(0);
+
+  const cardOpacityReanimated = useSharedValue(0);
+  const logoOpacityReanimated = useSharedValue(0);
+
+  useEffect(() => {
+    if (cardBrand === CardBrand.default) {
+      cardOpacityReanimated.value = withTiming(0);
+      logoOpacityReanimated.value = withTiming(0);
+      return;
+    }
+
+    logoOpacityReanimated.value = withTiming(
+      1,
+      {
+        duration: 300,
+      },
+      () =>
+        (cardOpacityReanimated.value = withTiming(1, {
+          duration: 500,
+        }))
+    );
+  }, [cardBrand]);
+
+  useSharedValueEffect(
+    () => {
+      cardOpacity.current = cardOpacityReanimated.value;
+      logoOpacity.current = logoOpacityReanimated.value;
+    },
+    cardOpacityReanimated,
+    logoOpacityReanimated
+  );
+
   return (
     <>
       <Canvas style={{ height, width }}>
         <RoundedRect x={0} y={0} width={width} height={height} r={10}>
+          <LinearGradient
+            start={vec(0, 0)}
+            end={vec(256, 256)}
+            colors={cardData.default.colors}
+          />
+        </RoundedRect>
+        <RoundedRect
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          r={10}
+          opacity={cardOpacity}
+        >
           <LinearGradient
             start={vec(0, 0)}
             end={vec(256, 256)}
@@ -56,6 +107,7 @@ export const Card = ({ children, cardBrand }: CardProps) => {
             y={0}
             width={100}
             height={100}
+            opacity={logoOpacity}
           />
         )}
         {children}
