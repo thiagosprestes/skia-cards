@@ -33,6 +33,17 @@ export const Expiration = () => {
 
   const onGoToPreviousStep = () => changeStep(CardStep.number);
 
+  const onValidateStep = () => {
+    if (!card.expiration) {
+      setError("expirationDate", {
+        message: "Campo obrigatório",
+      });
+      return;
+    }
+
+    handleSubmit(onGoToNextStep)();
+  };
+
   const onGoToNextStep = () => {
     const currentYear = Number(new Date().getFullYear().toString().slice(2, 4));
     const currentMonth = Number((new Date().getMonth() + 1).toString());
@@ -106,7 +117,7 @@ export const Expiration = () => {
       />
       <Button
         text="Próxima etapa"
-        onPress={handleSubmit(onGoToNextStep)}
+        onPress={onValidateStep}
         type={ButtonType.contained}
       />
     </>

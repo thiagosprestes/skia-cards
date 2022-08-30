@@ -55,16 +55,12 @@ export const Card = ({ children, cardBrand }: CardProps) => {
       return;
     }
 
-    logoOpacityReanimated.value = withTiming(
-      1,
-      {
-        duration: 300,
-      },
-      () =>
-        (cardOpacityReanimated.value = withTiming(1, {
-          duration: 500,
-        }))
-    );
+    logoOpacityReanimated.value = withTiming(1, {
+      duration: 300,
+    });
+    cardOpacityReanimated.value = withTiming(1, {
+      duration: 400,
+    });
   }, [cardBrand]);
 
   useSharedValueEffect(
