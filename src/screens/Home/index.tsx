@@ -1,23 +1,20 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import {GestureDetector} from 'react-native-gesture-handler';
+import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import {Card} from '../../components/Card';
 import {CardBack} from '../../components/Card/CardBack';
 import {CardFront} from '../../components/Card/CardFront';
 import {StepContainer} from '../../components/CardSteps/StepContainer';
 import {CardContext, CardContextProps} from '../../contexts/card';
+import {useRotateCard} from '../../hooks/useRotateCard';
 import {CardBrand, getCardBrand} from '../../utils/cardBrands';
 import styles from './styles';
 
 export const Home = () => {
   const [cardBrand, setCardBrand] = useState(CardBrand.default);
+
+  const {gesture, rotateCardStyle} = useRotateCard();
 
   const {card, cardFrontPosition, cardBackPosition, flipCard, step} =
     useContext(CardContext) as CardContextProps;
@@ -55,44 +52,6 @@ export const Home = () => {
 
     setCardBrand(CardBrand.default);
   }, [number]);
-
-  const rotateX = useSharedValue(0);
-  const rotateY = useSharedValue(0);
-
-  const gesture = Gesture.Pan()
-    .onUpdate(event => {
-      rotateX.value = interpolate(
-        event.y,
-        [0, 200],
-        [10, -10],
-        Extrapolate.CLAMP,
-      );
-      rotateY.value = interpolate(
-        event.x,
-        [0, 500],
-        [-10, 10],
-        Extrapolate.CLAMP,
-      );
-    })
-    .onFinalize(() => {
-      rotateX.value = withTiming(0);
-      rotateY.value = withTiming(0);
-    });
-
-  const rotateCardStyle = useAnimatedStyle(() => {
-    const rotateXValue = `${rotateX.value}deg`;
-    const rotateYValue = `${rotateY.value}deg`;
-
-    return {
-      transform: [
-        {
-          perspective: 300,
-        },
-        {rotateX: rotateXValue},
-        {rotateY: rotateYValue},
-      ],
-    };
-  }, []);
 
   return (
     <View style={styles.container}>

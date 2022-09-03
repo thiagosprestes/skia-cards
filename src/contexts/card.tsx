@@ -1,21 +1,21 @@
-import React, { createContext, ReactElement, useState } from "react";
+import React, {createContext, ReactElement, useState} from 'react';
 import {
   Easing,
   SharedValue,
   useSharedValue,
   withTiming,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
 
 export enum CardPosition {
-  FRONT = "front",
-  BACK = "back",
+  FRONT = 'front',
+  BACK = 'back',
 }
 
 export enum CardStep {
-  number = "number",
-  expiration = "expiration",
-  holder = "holder",
-  securityCode = "securityCode",
+  number = 'number',
+  expiration = 'expiration',
+  holder = 'holder',
+  securityCode = 'securityCode',
 }
 
 interface Card {
@@ -31,7 +31,7 @@ interface setCardFieldValueProps {
 }
 
 export interface CardContextProps {
-  setCardFieldValue({ step, value }: setCardFieldValueProps): void;
+  setCardFieldValue({step, value}: setCardFieldValueProps): void;
   clearCardData(): void;
   step: CardStep;
   changeStep(step: CardStep): void;
@@ -49,10 +49,10 @@ interface CardProps {
 }
 
 export const CardContext = createContext<CardContextProps | undefined>(
-  undefined
+  undefined,
 );
 
-export const CardProvider = ({ children }: CardProps) => {
+export const CardProvider = ({children}: CardProps) => {
   const cardInitialState = {
     number: undefined,
     expiration: undefined,
@@ -64,24 +64,24 @@ export const CardProvider = ({ children }: CardProps) => {
   const [step, setStep] = useState(CardStep.number);
   const [cardPosition, setCardPosition] = useState(CardPosition.FRONT);
 
-  const cardFrontPosition = useSharedValue("0deg");
-  const cardBackPosition = useSharedValue("90deg");
+  const cardFrontPosition = useSharedValue('0deg');
+  const cardBackPosition = useSharedValue('90deg');
 
   const flipCardToFront = () => {
     setCardPosition(CardPosition.FRONT);
 
     cardBackPosition.value = withTiming(
-      "90deg",
+      '90deg',
       {
         duration: 200,
         easing: Easing.linear,
       },
       () => {
-        cardFrontPosition.value = withTiming("0deg", {
+        cardFrontPosition.value = withTiming('0deg', {
           duration: 200,
           easing: Easing.linear,
         });
-      }
+      },
     );
   };
 
@@ -89,22 +89,22 @@ export const CardProvider = ({ children }: CardProps) => {
     setCardPosition(CardPosition.BACK);
 
     cardFrontPosition.value = withTiming(
-      "90deg",
+      '90deg',
       {
         duration: 200,
         easing: Easing.linear,
       },
       () => {
-        cardBackPosition.value = withTiming("180deg", {
+        cardBackPosition.value = withTiming('180deg', {
           duration: 200,
           easing: Easing.linear,
         });
-      }
+      },
     );
   };
 
   const flipCard = () => {
-    if (cardFrontPosition.value === "90deg") {
+    if (cardFrontPosition.value === '90deg') {
       flipCardToFront();
       return;
     }
@@ -112,8 +112,8 @@ export const CardProvider = ({ children }: CardProps) => {
     flipCardToBack();
   };
 
-  const setCardFieldValue = ({ step, value }: setCardFieldValueProps) => {
-    setCard((oldState) => ({
+  const setCardFieldValue = ({step, value}: setCardFieldValueProps) => {
+    setCard(oldState => ({
       ...oldState,
       [step]: value,
     }));
@@ -133,7 +133,9 @@ export const CardProvider = ({ children }: CardProps) => {
   };
 
   const changeStep = (step: CardStep) => {
-    if (step === CardStep.securityCode) flipCardToBack();
+    if (step === CardStep.securityCode) {
+      flipCardToBack();
+    }
 
     setStep(step);
   };
@@ -152,8 +154,7 @@ export const CardProvider = ({ children }: CardProps) => {
         flipCardToFront,
         flipCardToBack,
         flipCard,
-      }}
-    >
+      }}>
       {children}
     </CardContext.Provider>
   );
