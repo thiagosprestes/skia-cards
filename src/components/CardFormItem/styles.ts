@@ -2,7 +2,6 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     marginTop: 20,
   },
   text: {
@@ -11,12 +10,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
   },
   input: {
-    backgroundColor: '#303030',
-    borderRadius: 8,
-    padding: 10,
-    marginTop: 16,
     fontFamily: 'Roboto-Regular',
     color: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#292929',
+  },
+  focusedInput: {
+    borderBottomColor: 'red',
   },
   button: {
     backgroundColor: '#0EB14B',
@@ -28,6 +28,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     fontFamily: 'Roboto-Bold',
+  },
+  formItem: {
+    marginBottom: 24,
   },
 });
 

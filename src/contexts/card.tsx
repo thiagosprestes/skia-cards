@@ -11,7 +11,7 @@ export enum CardPosition {
   BACK = 'back',
 }
 
-export enum CardStep {
+export enum CardField {
   number = 'number',
   expiration = 'expiration',
   holder = 'holder',
@@ -26,15 +26,14 @@ interface Card {
 }
 
 interface setCardFieldValueProps {
-  step: CardStep;
+  field: CardField;
   value: string;
 }
 
 export interface CardContextProps {
-  setCardFieldValue({step, value}: setCardFieldValueProps): void;
+  setCardFieldValue({field, value}: setCardFieldValueProps): void;
   clearCardData(): void;
-  step: CardStep;
-  changeStep(step: CardStep): void;
+  selectedField: CardField | undefined | null;
   cardPosition: CardPosition;
   card: Card;
   cardFrontPosition: SharedValue<string>;
@@ -42,6 +41,7 @@ export interface CardContextProps {
   flipCardToFront(): void;
   flipCardToBack(): void;
   flipCard(): void;
+  selectField(field: CardField): void;
 }
 
 interface CardProps {
@@ -61,7 +61,7 @@ export const CardProvider = ({children}: CardProps) => {
   };
 
   const [card, setCard] = useState<Card>(cardInitialState);
-  const [step, setStep] = useState(CardStep.number);
+  const [selectedField, setSelectedField] = useState<CardField | null>();
   const [cardPosition, setCardPosition] = useState(CardPosition.FRONT);
 
   const cardFrontPosition = useSharedValue('0deg');
@@ -112,32 +112,39 @@ export const CardProvider = ({children}: CardProps) => {
     flipCardToBack();
   };
 
-  const setCardFieldValue = ({step, value}: setCardFieldValueProps) => {
+  const setCardFieldValue = ({field, value}: setCardFieldValueProps) => {
     setCard(oldState => ({
       ...oldState,
-      [step]: value,
+      [field]: value,
     }));
+  };
 
-    if (step === CardStep.securityCode) {
+  const clearCardData = () => {
+    if (cardPosition === CardPosition.BACK) {
+      flipCardToFront();
+    }
+
+    setCard(cardInitialState);
+    setSelectedField(CardField.number);
+  };
+
+  const selectField = (field: CardField) => {
+    setSelectedField(field);
+
+    if (
+      field === CardField.securityCode &&
+      cardPosition === CardPosition.FRONT
+    ) {
       flipCardToBack();
       return;
     }
 
-    flipCardToFront();
-  };
-
-  const clearCardData = () => {
-    flipCardToFront();
-    setCard(cardInitialState);
-    setStep(CardStep.number);
-  };
-
-  const changeStep = (step: CardStep) => {
-    if (step === CardStep.securityCode) {
-      flipCardToBack();
+    if (
+      field !== CardField.securityCode &&
+      cardPosition === CardPosition.BACK
+    ) {
+      flipCardToFront();
     }
-
-    setStep(step);
   };
 
   return (
@@ -145,8 +152,7 @@ export const CardProvider = ({children}: CardProps) => {
       value={{
         setCardFieldValue,
         clearCardData,
-        step,
-        changeStep,
+        selectedField,
         card,
         cardPosition,
         cardFrontPosition,
@@ -154,6 +160,7 @@ export const CardProvider = ({children}: CardProps) => {
         flipCardToFront,
         flipCardToBack,
         flipCard,
+        selectField,
       }}>
       {children}
     </CardContext.Provider>

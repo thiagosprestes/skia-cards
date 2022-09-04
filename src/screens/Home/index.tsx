@@ -5,7 +5,7 @@ import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import {Card} from '../../components/Card';
 import {CardBack} from '../../components/Card/CardBack';
 import {CardFront} from '../../components/Card/CardFront';
-import {StepContainer} from '../../components/CardSteps/StepContainer';
+import {CardForm} from '../../components/CardForm';
 import {CardContext, CardContextProps} from '../../contexts/card';
 import {useRotateCard} from '../../hooks/useRotateCard';
 import {CardBrand, getCardBrand} from '../../utils/cardBrands';
@@ -16,7 +16,7 @@ export const Home = () => {
 
   const {gesture, rotateCardStyle} = useRotateCard();
 
-  const {card, cardFrontPosition, cardBackPosition, flipCard, step} =
+  const {card, cardFrontPosition, cardBackPosition, flipCard, selectedField} =
     useContext(CardContext) as CardContextProps;
 
   const {number, expiration, holder, securityCode} = card;
@@ -64,7 +64,7 @@ export const Home = () => {
                   cardNumber={number}
                   cardExpiration={expiration}
                   cardHolder={holder}
-                  step={step}
+                  selectedField={selectedField}
                 />
               </Card>
             </Animated.View>
@@ -76,7 +76,7 @@ export const Home = () => {
           </Animated.View>
         </TouchableWithoutFeedback>
       </GestureDetector>
-      <StepContainer />
+      <CardForm />
     </View>
   );
 };

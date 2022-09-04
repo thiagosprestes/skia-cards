@@ -1,11 +1,11 @@
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
 
-import styles from "./styles";
+import styles from './styles';
 
 export enum ButtonType {
-  contained = "contained",
-  outlined = "outlined",
+  contained = 'contained',
+  outlined = 'outlined',
 }
 
 interface ButtonProps {
@@ -14,7 +14,7 @@ interface ButtonProps {
   type: ButtonType;
 }
 
-export const Button = ({ onPress, text, type }: ButtonProps) => {
+export const Button = ({onPress, text, type}: ButtonProps) => {
   const isButtonTypeContained = type === ButtonType.contained;
 
   return (
@@ -23,14 +23,12 @@ export const Button = ({ onPress, text, type }: ButtonProps) => {
       style={[
         styles.button,
         isButtonTypeContained ? styles.contained : styles.outlined,
-      ]}
-    >
+      ]}>
       <Text
         style={[
           styles.buttonText,
           isButtonTypeContained ? styles.textContained : styles.textOutlined,
-        ]}
-      >
+        ]}>
         {text}
       </Text>
     </TouchableOpacity>

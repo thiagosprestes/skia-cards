@@ -1,20 +1,20 @@
 import React from 'react';
 import {Group, Rect, Text, useFont} from '@shopify/react-native-skia';
 import RobotoBold from '../../../../assets/fonts/Roboto-Bold.ttf';
-import {CardStep} from '../../../contexts/card';
+import {CardField} from '../../../contexts/card';
 
 interface CardFront {
   cardNumber?: number;
   cardExpiration?: string;
   cardHolder?: string;
-  step: CardStep;
+  selectedField?: CardField | null;
 }
 
 export const CardFront = ({
   cardNumber,
   cardExpiration,
   cardHolder,
-  step,
+  selectedField,
 }: CardFront) => {
   const fontBold = useFont(RobotoBold, 16);
 
@@ -31,7 +31,7 @@ export const CardFront = ({
         font={fontBold}
         color="#fff"
       />
-      {step === CardStep.number && (
+      {selectedField === CardField.number && (
         <Rect height={2} width={220} color="#fff" x={20} y={130} />
       )}
       <Text
@@ -41,7 +41,7 @@ export const CardFront = ({
         font={fontBold}
         color="#fff"
       />
-      {step === CardStep.expiration && (
+      {selectedField === CardField.expiration && (
         <Rect height={2} width={45} color="#fff" x={20} y={180} />
       )}
       <Text
@@ -51,7 +51,7 @@ export const CardFront = ({
         font={fontBold}
         color="#fff"
       />
-      {step === CardStep.holder && (
+      {selectedField === CardField.holder && (
         <Rect height={2} width={200} color="#fff" x={80} y={180} />
       )}
     </Group>
