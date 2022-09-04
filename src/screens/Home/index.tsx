@@ -1,5 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {GestureDetector} from 'react-native-gesture-handler';
 import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import {Card} from '../../components/Card';

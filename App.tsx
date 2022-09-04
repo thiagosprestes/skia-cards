@@ -7,11 +7,7 @@ import {Home} from './src/screens/Home';
 const App = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <StatusBar
-        barStyle={'light-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar barStyle={'dark-content'} backgroundColor="#F2F2F4" />
       <CardProvider>
         <Home />
       </CardProvider>

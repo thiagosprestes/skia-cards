@@ -21,6 +21,7 @@ export const CardFormItem = ({title, field}: CardFormItemProps) => {
     card: {number, holder, expiration, securityCode},
     setCardFieldValue,
     selectField,
+    selectedField,
   } = useContext(CardContext) as CardContextProps;
 
   return (
@@ -31,7 +32,10 @@ export const CardFormItem = ({title, field}: CardFormItemProps) => {
           [CardField.number]: (
             <TextInputMask
               type="credit-card"
-              style={styles.input}
+              style={[
+                styles.input,
+                selectedField === CardField.number && styles.focusedInput,
+              ]}
               onChangeText={text => {
                 setCardFieldValue({
                   field,
@@ -44,7 +48,10 @@ export const CardFormItem = ({title, field}: CardFormItemProps) => {
           ),
           [CardField.holder]: (
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                selectedField === CardField.holder && styles.focusedInput,
+              ]}
               onChangeText={text => {
                 setCardFieldValue({
                   field,
@@ -58,7 +65,10 @@ export const CardFormItem = ({title, field}: CardFormItemProps) => {
           [CardField.expiration]: (
             <TextInputMask
               type="datetime"
-              style={styles.input}
+              style={[
+                styles.input,
+                selectedField === CardField.expiration && styles.focusedInput,
+              ]}
               onChangeText={text => {
                 setCardFieldValue({
                   field,
@@ -73,7 +83,10 @@ export const CardFormItem = ({title, field}: CardFormItemProps) => {
           [CardField.securityCode]: (
             <TextInputMask
               type="only-numbers"
-              style={styles.input}
+              style={[
+                styles.input,
+                selectedField === CardField.securityCode && styles.focusedInput,
+              ]}
               onChangeText={text => {
                 setCardFieldValue({
                   field,

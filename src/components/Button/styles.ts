@@ -13,18 +13,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
   },
   contained: {
-    backgroundColor: '#fff',
+    backgroundColor: '#212122',
   },
   outlined: {
-    backgroundColor: '#000',
-    borderWidth: 1,
-    borderColor: '#fff',
+    backgroundColor: 'transparent',
+    borderWidth: 3,
+    borderColor: '#000',
   },
   textContained: {
-    color: '#000',
+    color: '#fff',
   },
   textOutlined: {
-    color: '#fff',
+    color: '#000',
   },
 });
 

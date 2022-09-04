@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   title: {
-    color: '#fff',
+    color: '#8b8b8b',
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
     marginVertical: 20,

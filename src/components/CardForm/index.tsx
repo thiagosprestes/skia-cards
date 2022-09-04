@@ -1,17 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
 import {Alert, ScrollView, Text, View} from 'react-native';
 import {CardContext, CardContextProps, CardField} from '../../contexts/card';
 import {Button, ButtonType} from '../Button';
-import {CardFormData, CardFormItem} from '../CardFormItem';
+import {CardFormItem} from '../CardFormItem';
 import Snackbar from 'react-native-snackbar';
-
 import styles from './styles';
-import nfcManager from 'react-native-nfc-manager';
 import {useNfc} from '../../hooks/useNfc';
+import {
+  CardBrand,
+  cardBrandsColors,
+  getCardBrand,
+} from '../../utils/cardBrands';
 
 export const CardForm = () => {
+  const [cardBrand, setCardBrand] = useState(CardBrand.default);
+
   const {card, clearCardData} = useContext(CardContext) as CardContextProps;
 
   const {hasNfc, isNfcEnabled, verifyNfc, onReadNfc} = useNfc();
@@ -74,8 +78,6 @@ export const CardForm = () => {
 
   useEffect(() => {
     verifyNfc();
-
-    console.log();
   }, []);
 
   useEffect(() => {
@@ -84,13 +86,24 @@ export const CardForm = () => {
     }
   }, [hasNfcRequirements]);
 
+  useEffect(() => {
+    const brand = getCardBrand(card.number!);
+
+    if (brand) {
+      setCardBrand(CardBrand[brand]);
+      return;
+    }
+
+    setCardBrand(CardBrand.default);
+  }, [card.number]);
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}>
-      <Text style={styles.title}>
-        {hasNfcRequirements && 'Insira os dados ou aproxime um cartão'}
-      </Text>
+      {hasNfcRequirements && (
+        <Text style={styles.title}>Insira os dados ou aproxime um cartão</Text>
+      )}
       <View style={styles.container}>
         <CardFormItem title="Número" field={CardField.number} />
         <CardFormItem title="Nome do titular" field={CardField.holder} />
@@ -106,9 +119,10 @@ export const CardForm = () => {
         </View>
       </View>
       <Button
+        cardBrand={cardBrand && cardBrandsColors[cardBrand][1]}
         onPress={handleOnSubmit}
         text="Salvar cartão"
-        type={ButtonType.outlined}
+        type={ButtonType.contained}
       />
     </ScrollView>
   );
