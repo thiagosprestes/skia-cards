@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, ScrollView, Text, View} from 'react-native';
 import {CardContext, CardContextProps, CardField} from '../../contexts/card';
@@ -7,9 +7,14 @@ import {CardFormData, CardFormItem} from '../CardFormItem';
 import Snackbar from 'react-native-snackbar';
 
 import styles from './styles';
+import nfcManager from 'react-native-nfc-manager';
 
 export const CardForm = () => {
   const {card, clearCardData} = useContext(CardContext) as CardContextProps;
+
+  const [hasNfc, setHasNfc] = useState(false);
+
+  const verifyNfc = async () => setHasNfc(await nfcManager.isSupported());
 
   const handleOnSubmit = () => {
     const isFormIncomplete =
@@ -62,9 +67,13 @@ export const CardForm = () => {
     }
   };
 
+  useEffect(() => verifyNfc(), []);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Insira os dados ou aproxime um cartão</Text>
+      <Text style={styles.title}>
+        Insira os dados{hasNfc && ' ou aproxime um cartão'}
+      </Text>
       <View style={styles.container}>
         <CardFormItem title="Número" field={CardField.number} />
         <CardFormItem title="Nome do titular" field={CardField.holder} />
