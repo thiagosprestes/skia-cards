@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 14,
     fontFamily: 'Roboto-Bold',
   },
   input: {
@@ -14,20 +14,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#292929',
-  },
-  focusedInput: {
-    borderBottomColor: 'red',
-  },
-  button: {
-    backgroundColor: '#0EB14B',
-    padding: 12,
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    textAlign: 'center',
-    fontFamily: 'Roboto-Bold',
   },
   formItem: {
     marginBottom: 24,

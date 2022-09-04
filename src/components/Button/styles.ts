@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#000',
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'center',
     fontFamily: 'Roboto-Bold',
   },

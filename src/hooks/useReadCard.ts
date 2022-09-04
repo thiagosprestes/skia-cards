@@ -1,7 +1,11 @@
+global.Buffer = global.Buffer || require('buffer').Buffer;
+
 import TLV from 'node-tlv';
+import {useContext} from 'react';
 import nfcManager from 'react-native-nfc-manager';
 import {ApduResponse} from '../classes/ApdeuResponse';
 import {ApduCommand} from '../classes/ApduCommand';
+import {CardContext, CardContextProps, CardField} from '../contexts/card';
 
 function hexStringToByte(str: string): number[] {
   if (!str) {
@@ -23,6 +27,8 @@ function toHexString(value: number[]) {
 }
 
 export const useReadCard = () => {
+  const {setCardFieldValue} = useContext(CardContext) as CardContextProps;
+
   const getCardData = async () => {
     const getPpseApduCommand = new ApduCommand(
       0x00,
@@ -111,10 +117,24 @@ export const useReadCard = () => {
 
         if (cardNumber) {
           console.log(cardNumber.getValue());
+          setCardFieldValue({
+            field: CardField.number,
+            value: cardNumber.getValue(),
+          });
         }
 
         if (cardExpiration) {
           console.log(cardExpiration.getValue());
+
+          const expiration = cardExpiration.getValue();
+
+          const expirationYear = expiration.substring(0, 2);
+          const expirationMonth = expiration.substring(2, 4);
+
+          setCardFieldValue({
+            field: CardField.expiration,
+            value: `${expirationMonth}/${expirationYear}`,
+          });
         }
       }
     }

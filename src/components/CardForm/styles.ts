@@ -7,10 +7,11 @@ const styles = StyleSheet.create({
   columns: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
   title: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: 'Roboto-Bold',
     marginVertical: 20,
   },

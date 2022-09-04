@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Alert, ScrollView, Text, View} from 'react-native';
@@ -8,13 +9,14 @@ import Snackbar from 'react-native-snackbar';
 
 import styles from './styles';
 import nfcManager from 'react-native-nfc-manager';
+import {useNfc} from '../../hooks/useNfc';
 
 export const CardForm = () => {
   const {card, clearCardData} = useContext(CardContext) as CardContextProps;
 
-  const [hasNfc, setHasNfc] = useState(false);
+  const {hasNfc, isNfcEnabled, verifyNfc, onReadNfc} = useNfc();
 
-  const verifyNfc = async () => setHasNfc(await nfcManager.isSupported());
+  const hasNfcRequirements = hasNfc && isNfcEnabled;
 
   const handleOnSubmit = () => {
     const isFormIncomplete =
@@ -44,7 +46,10 @@ export const CardForm = () => {
       const isExpirationYearValid = expirationYear >= currentYear;
 
       const isExpired =
-        !isExpirationYearValid || currentMonth >= expirationMonth;
+        !isExpirationYearValid ||
+        (currentMonth >= expirationMonth && !isExpirationYearValid);
+
+      console.log(expirationMonth);
 
       if (!isValidMonth) {
         Snackbar.show({
@@ -67,12 +72,24 @@ export const CardForm = () => {
     }
   };
 
-  useEffect(() => verifyNfc(), []);
+  useEffect(() => {
+    verifyNfc();
+
+    console.log();
+  }, []);
+
+  useEffect(() => {
+    if (hasNfcRequirements) {
+      onReadNfc();
+    }
+  }, [hasNfcRequirements]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}>
       <Text style={styles.title}>
-        Insira os dados{hasNfc && ' ou aproxime um cartão'}
+        {hasNfcRequirements && 'Insira os dados ou aproxime um cartão'}
       </Text>
       <View style={styles.container}>
         <CardFormItem title="Número" field={CardField.number} />

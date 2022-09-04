@@ -38,6 +38,7 @@ export const Card = ({children, cardBrand}: CardProps) => {
     amex: {colors: cardBrandsColors.amex, logo: amexLogo},
     visa: {colors: cardBrandsColors.visa, logo: visaLogo},
     mastercard: {colors: cardBrandsColors.mastercard, logo: mastercardLogo},
+    nubank: {colors: cardBrandsColors.nubank, logo: mastercardLogo},
     elo: {colors: cardBrandsColors.elo, logo: eloLogo},
     hipercard: {colors: cardBrandsColors.hipercard, logo: hipercardLogo},
   };
@@ -98,10 +99,10 @@ export const Card = ({children, cardBrand}: CardProps) => {
         {cardData[cardBrand].logo && (
           <Image
             image={cardData[cardBrand].logo!}
-            x={width - 120}
+            x={width - 100}
             y={0}
-            width={100}
-            height={100}
+            width={80}
+            height={80}
             opacity={logoOpacity}
           />
         )}
