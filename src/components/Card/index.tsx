@@ -24,8 +24,8 @@ interface CardProps {
 }
 
 export const Card = ({children, cardBrand}: CardProps) => {
-  const width = Dimensions.get('window').width - 36;
-  const height = 200;
+  const width = 85.6 * 4;
+  const height = 53.98 * 4;
 
   const visaLogo = useImage(visa);
   const amexLogo = useImage(amex);

@@ -1,4 +1,4 @@
-import React, {createContext, ReactElement, useState} from 'react';
+import React, {createContext, ReactElement, useEffect, useState} from 'react';
 import {
   Easing,
   SharedValue,
@@ -42,6 +42,8 @@ export interface CardContextProps {
   flipCardToBack(): void;
   flipCard(): void;
   selectField(field: CardField): void;
+  toggleNfcRead(): void;
+  isFinishRead?: boolean;
 }
 
 interface CardProps {
@@ -58,11 +60,13 @@ export const CardProvider = ({children}: CardProps) => {
     expiration: undefined,
     holder: undefined,
     securityCode: undefined,
+    isFinishRead: undefined,
   };
 
   const [card, setCard] = useState<Card>(cardInitialState);
   const [selectedField, setSelectedField] = useState<CardField | null>();
   const [cardPosition, setCardPosition] = useState(CardPosition.FRONT);
+  const [isFinishRead, setIsFinishRead] = useState<boolean>();
 
   const cardFrontPosition = useSharedValue('0deg');
   const cardBackPosition = useSharedValue('90deg');
@@ -147,6 +151,12 @@ export const CardProvider = ({children}: CardProps) => {
     }
   };
 
+  const toggleNfcRead = () => {
+    setIsFinishRead(!isFinishRead);
+  };
+
+  useEffect(() => console.log('FDP', isFinishRead), [isFinishRead]);
+
   return (
     <CardContext.Provider
       value={{
@@ -161,6 +171,8 @@ export const CardProvider = ({children}: CardProps) => {
         flipCardToBack,
         flipCard,
         selectField,
+        toggleNfcRead,
+        isFinishRead,
       }}>
       {children}
     </CardContext.Provider>

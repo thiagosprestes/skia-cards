@@ -1,5 +1,6 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import nfcManager, {NfcAdapter, NfcTech} from 'react-native-nfc-manager';
+import {CardContext, CardContextProps} from '../contexts/card';
 import {useReadCard} from './useReadCard';
 
 interface HookReturn {
@@ -12,6 +13,8 @@ interface HookReturn {
 export const useNfc = (): HookReturn => {
   const [hasNfc, setHasNfc] = useState(false);
   const [isNfcEnabled, setIsNfcEnabled] = useState(false);
+
+  const {toggleNfcRead} = useContext(CardContext) as CardContextProps;
 
   const {getCardData} = useReadCard();
 
@@ -26,8 +29,9 @@ export const useNfc = (): HookReturn => {
       await nfcManager.requestTechnology(NfcTech.IsoDep, {
         isReaderModeEnabled: true,
         readerModeDelay: 10,
+        // invalidateAfterFirstRead: true,
         readerModeFlags:
-          NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+          NfcAdapter.FLAG_READER_NFC_A + NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
       });
       // the resolved tag object will contain `ndefMessage` property
       const tag = await nfcManager.getTag();
@@ -36,7 +40,9 @@ export const useNfc = (): HookReturn => {
 
       console.log('Tag found', tag);
 
-      nfcManager.cancelTechnologyRequest();
+      // nfcManager.cancelTechnologyRequest();
+
+      toggleNfcRead();
     } catch (ex) {
       console.log('Oops!', ex);
     }

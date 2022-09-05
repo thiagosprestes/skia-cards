@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     marginBottom: 40,
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

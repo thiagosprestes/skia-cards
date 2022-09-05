@@ -5,7 +5,9 @@ import {useContext} from 'react';
 import nfcManager from 'react-native-nfc-manager';
 import {ApduResponse} from '../classes/ApdeuResponse';
 import {ApduCommand} from '../classes/ApduCommand';
+import {DOL} from '../classes/DOL';
 import {CardContext, CardContextProps, CardField} from '../contexts/card';
+import terminalTag from '../utils/terminalTag.json';
 
 function hexStringToByte(str: string): number[] {
   if (!str) {
@@ -20,7 +22,7 @@ function hexStringToByte(str: string): number[] {
   return a;
 }
 
-function toHexString(value: number[]) {
+export function toHexString(value: number[]) {
   return Array.from(value, function (byte) {
     return ('0' + (byte & 0xff).toString(16)).slice(-2);
   }).join('');
@@ -47,7 +49,7 @@ export const useReadCard = () => {
       ),
     );
 
-    const tlv = TLV.parse(toHexString(getPpseApduResponse.data));
+    let tlv = TLV.parse(toHexString(getPpseApduResponse.data));
 
     const aid = tlv.find('A5').find('bF0C').getChild()[0].find('4F').getValue();
 
@@ -67,12 +69,49 @@ export const useReadCard = () => {
 
     console.log(toHexString(getAppApduResponse.data));
 
+    tlv = TLV.parse(toHexString(getAppApduResponse.data));
+    const pdol = tlv.find('a5').find('9f38');
+
+    let pdolValue: number[] = [];
+
+    if (pdol) {
+      console.log(
+        '🚀 ~ file: useReadCard.ts ~ line 77 ~ getCardData ~ pdol',
+        pdol.getValue(),
+      );
+
+      // const dol = new DOL(hexStringToByte(pdol.getValue()));
+
+      // console.log(
+      //   '🚀 ~ file: useReadCard.ts ~ line 80 ~ getCardData ~ dol',
+      //   dol,
+      // );
+      console.log(
+        '🚀 ~ file: useReadCard.ts ~ line 80 ~ getCardData ~ dol',
+        pdol.parseDolValue(),
+      );
+
+      for (const tag of pdol.parseDolValue().getList()) {
+        console.log('aaá', tag.tag);
+        console.log('uyerwgoueiswyni', hexStringToByte(terminalTag[tag.tag]));
+
+        pdolValue.push(...hexStringToByte(terminalTag[tag.tag]));
+      }
+
+      console.log('VRAU', pdolValue);
+      pdolValue = [0x83, pdolValue.length, ...pdolValue];
+    } else {
+      pdolValue = [0x83, 0x00];
+    }
+
+    console.log(pdol);
+
     const getGpoApduCommand = new ApduCommand(
       0x80,
       0xa8,
       0x00,
       0x00,
-      [0x83, 0x00],
+      pdolValue,
     );
 
     const getGpoApduResponse = new ApduResponse(
@@ -85,6 +124,9 @@ export const useReadCard = () => {
 
     const afl = gpo.find('94').getValue();
 
+    let cardNumber = null;
+    let cardExpiration = null;
+
     for (let index = 0; index < afl.length; index += 8) {
       const sfi = afl.slice(index, index + 2);
       const record1 = afl.slice(index + 2, index + 4);
@@ -95,6 +137,10 @@ export const useReadCard = () => {
         record <= hexStringToByte(record2)[0];
         record++
       ) {
+        if (cardNumber && cardExpiration) {
+          return;
+        }
+
         const getReadRecordApduCommand = new ApduCommand(
           0x00,
           0xb2,
@@ -112,8 +158,8 @@ export const useReadCard = () => {
           toHexString(getReadRecordApduResponse.data),
         );
 
-        const cardNumber = recordResponse.find('5A');
-        const cardExpiration = recordResponse.find('5F24');
+        cardNumber = recordResponse.find('5A');
+        cardExpiration = recordResponse.find('5F24');
 
         if (cardNumber) {
           console.log(cardNumber.getValue());

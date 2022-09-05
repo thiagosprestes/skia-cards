@@ -59,27 +59,33 @@ export const Home = () => {
 
   return (
     <View style={styles.container}>
-      <GestureDetector gesture={gesture}>
-        <TouchableWithoutFeedback onPress={flipCard}>
-          <Animated.View style={(styles.cardContainer, rotateCardStyle)}>
-            <Animated.View style={flipFront}>
-              <Card cardBrand={cardBrand}>
-                <CardFront
-                  cardNumber={number}
-                  cardExpiration={expiration}
-                  cardHolder={holder}
-                  selectedField={selectedField}
-                />
-              </Card>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <GestureDetector gesture={gesture}>
+          <TouchableWithoutFeedback onPress={flipCard}>
+            <Animated.View style={(styles.cardContainer, rotateCardStyle)}>
+              <Animated.View style={flipFront}>
+                <Card cardBrand={cardBrand}>
+                  <CardFront
+                    cardNumber={number}
+                    cardExpiration={expiration}
+                    cardHolder={holder}
+                    selectedField={selectedField}
+                  />
+                </Card>
+              </Animated.View>
+              <Animated.View style={[flipBack, {position: 'absolute'}]}>
+                <Card cardBrand={cardBrand}>
+                  <CardBack securityCode={securityCode} />
+                </Card>
+              </Animated.View>
             </Animated.View>
-            <Animated.View style={[flipBack, {position: 'absolute'}]}>
-              <Card cardBrand={cardBrand}>
-                <CardBack securityCode={securityCode} />
-              </Card>
-            </Animated.View>
-          </Animated.View>
-        </TouchableWithoutFeedback>
-      </GestureDetector>
+          </TouchableWithoutFeedback>
+        </GestureDetector>
+      </View>
       <CardForm />
     </View>
   );

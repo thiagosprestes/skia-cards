@@ -16,7 +16,9 @@ import {
 export const CardForm = () => {
   const [cardBrand, setCardBrand] = useState(CardBrand.default);
 
-  const {card, clearCardData} = useContext(CardContext) as CardContextProps;
+  const {card, clearCardData, isFinishRead} = useContext(
+    CardContext,
+  ) as CardContextProps;
 
   const {hasNfc, isNfcEnabled, verifyNfc, onReadNfc} = useNfc();
 
@@ -84,7 +86,7 @@ export const CardForm = () => {
     if (hasNfcRequirements) {
       onReadNfc();
     }
-  }, [hasNfcRequirements]);
+  }, [hasNfcRequirements, isFinishRead]);
 
   useEffect(() => {
     const brand = getCardBrand(card.number!);

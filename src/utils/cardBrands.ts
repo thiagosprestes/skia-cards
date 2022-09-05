@@ -14,7 +14,7 @@ interface CardBrandRegex {
 
 export const cardBrandsRegex: CardBrandRegex = {
   visa: /^4[0-9]{12}(?:[0-9]{3})/,
-  nubank: /^(516220|516230|516292|523421|537678|550209|554865){14}/,
+  nubank: /^(516220|516230|516292|523421|537678|550209|554865)/,
   mastercard: /^5[1-5][0-9]{14}/,
   amex: /^3[47][0-9]{13}/,
   hipercard: /^(606282\d{10}(\d{3})?)|(3841\d{15})/,
