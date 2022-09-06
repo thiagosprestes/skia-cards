@@ -1,3 +1,4 @@
+import TLV from 'node-tlv';
 import {toHexString} from '../hooks/useReadCard';
 
 export class ApduResponse {
@@ -7,10 +8,15 @@ export class ApduResponse {
   constructor(arr: number[]) {
     this.status = arr.slice(-2);
     this.data = arr.slice(0, -2);
-    console.log(
-      '🚀 ~ file: ApdeuResponse.ts ~ line 10 ~ ApduResponse ~ constructor ~ arr',
-      arr,
+  }
+
+  toString(): string {
+    return (
+      '<<< ' + toHexString(this.data), '[' + toHexString(this.status) + ']'
     );
-    console.log(toHexString(this.data), toHexString(this.status));
+  }
+
+  getAsTlv(): TLV {
+    return TLV.parse(toHexString(this.data));
   }
 }

@@ -25,11 +25,13 @@ export const useNfc = (): HookReturn => {
 
   const onReadNfc = async () => {
     try {
+      await nfcManager.cancelTechnologyRequest();
       // register for the NFC tag with NDEF in it
+      console.log('starting request');
       await nfcManager.requestTechnology(NfcTech.IsoDep, {
         isReaderModeEnabled: true,
-        readerModeDelay: 10,
-        // invalidateAfterFirstRead: true,
+        readerModeDelay: 1000,
+        invalidateAfterFirstRead: true,
         readerModeFlags:
           NfcAdapter.FLAG_READER_NFC_A + NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
       });
@@ -39,13 +41,11 @@ export const useNfc = (): HookReturn => {
       await getCardData();
 
       console.log('Tag found', tag);
-
-      // nfcManager.cancelTechnologyRequest();
-
-      toggleNfcRead();
     } catch (ex) {
       console.log('Oops!', ex);
     }
+
+    toggleNfcRead();
   };
 
   return {hasNfc, isNfcEnabled, verifyNfc, onReadNfc};

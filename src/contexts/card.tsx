@@ -155,7 +155,7 @@ export const CardProvider = ({children}: CardProps) => {
     setIsFinishRead(!isFinishRead);
   };
 
-  useEffect(() => console.log('FDP', isFinishRead), [isFinishRead]);
+  useEffect(() => console.log('isFinishRead', isFinishRead), [isFinishRead]);
 
   return (
     <CardContext.Provider
