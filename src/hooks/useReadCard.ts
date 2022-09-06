@@ -1,15 +1,13 @@
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
-import TLV from 'node-tlv';
 import {useContext} from 'react';
 import nfcManager from 'react-native-nfc-manager';
-import {ApduResponse} from '../classes/ApdeuResponse';
+import {ApduResponse} from '../classes/ApduResponse';
 import {ApduCommand} from '../classes/ApduCommand';
-import {DOL} from '../classes/DOL';
 import {CardContext, CardContextProps, CardField} from '../contexts/card';
 import terminalTag from '../utils/terminalTag.json';
 
-function hexStringToByte(str: string): number[] {
+export function hexStringToByte(str: string): number[] {
   if (!str) {
     return [];
   }
@@ -17,13 +15,14 @@ function hexStringToByte(str: string): number[] {
   var a: number[] = [];
 
   for (var i = 0, len = str.length; i < len; i += 2) {
-    a.push(parseInt(str.substr(i, 2), 16));
+    a.push(parseInt(str.slice(i, i + 2), 16));
   }
   return a;
 }
 
 export function toHexString(value: number[]) {
   return Array.from(value, function (byte) {
+    // eslint-disable-next-line no-bitwise
     return ('0' + (byte & 0xff).toString(16)).slice(-2);
   }).join('');
 }
@@ -31,96 +30,47 @@ export function toHexString(value: number[]) {
 export const useReadCard = () => {
   const {setCardFieldValue} = useContext(CardContext) as CardContextProps;
 
+  const cardTransceive = async (
+    command: ApduCommand,
+  ): Promise<ApduResponse> => {
+    console.log(`${command}`);
+    const response = new ApduResponse(
+      await nfcManager.isoDepHandler.transceive(command.getForTransceive()),
+    );
+    console.log(`${response}`);
+    return response;
+  };
+
   const getCardData = async () => {
-    const getPpseApduCommand = new ApduCommand(
-      0x00,
-      0xa4,
-      0x04,
-      0x00,
-      [
-        0x32, 0x50, 0x41, 0x59, 0x2e, 0x53, 0x59, 0x53, 0x2e, 0x44, 0x44, 0x46,
-        0x30, 0x31,
-      ],
+    const getPpseApduResponse = await cardTransceive(ApduCommand.getPPSE());
+
+    let ppseData = getPpseApduResponse.getAsTlv();
+
+    const aid = ppseData.findAll('4F')[0].getValue();
+
+    const getAppApduResponse = await cardTransceive(
+      ApduCommand.getApplication(hexStringToByte(aid)),
     );
 
-    const getPpseApduResponse = new ApduResponse(
-      await nfcManager.isoDepHandler.transceive(
-        getPpseApduCommand.getForTransceive(),
-      ),
-    );
-
-    let tlv = TLV.parse(toHexString(getPpseApduResponse.data));
-
-    const aid = tlv.find('A5').find('bF0C').getChild()[0].find('4F').getValue();
-
-    const getAppApduCommand = new ApduCommand(
-      0x00,
-      0xa4,
-      0x04,
-      0x00,
-      hexStringToByte(aid),
-    );
-
-    const getAppApduResponse = new ApduResponse(
-      await nfcManager.isoDepHandler.transceive(
-        getAppApduCommand.getForTransceive(),
-      ),
-    );
-
-    console.log(toHexString(getAppApduResponse.data));
-
-    tlv = TLV.parse(toHexString(getAppApduResponse.data));
-    const pdol = tlv.find('a5').find('9f38');
+    const appData = getAppApduResponse.getAsTlv();
+    const pdol = appData.find('9f38');
 
     let pdolValue: number[] = [];
 
     if (pdol) {
-      console.log(
-        '🚀 ~ file: useReadCard.ts ~ line 77 ~ getCardData ~ pdol',
-        pdol.getValue(),
-      );
-
-      // const dol = new DOL(hexStringToByte(pdol.getValue()));
-
-      // console.log(
-      //   '🚀 ~ file: useReadCard.ts ~ line 80 ~ getCardData ~ dol',
-      //   dol,
-      // );
-      console.log(
-        '🚀 ~ file: useReadCard.ts ~ line 80 ~ getCardData ~ dol',
-        pdol.parseDolValue(),
-      );
-
       for (const tag of pdol.parseDolValue().getList()) {
-        console.log('aaá', tag.tag);
-        console.log('uyerwgoueiswyni', hexStringToByte(terminalTag[tag.tag]));
-
         pdolValue.push(...hexStringToByte(terminalTag[tag.tag]));
       }
-
-      console.log('VRAU', pdolValue);
       pdolValue = [0x83, pdolValue.length, ...pdolValue];
     } else {
       pdolValue = [0x83, 0x00];
     }
 
-    console.log(pdol);
-
-    const getGpoApduCommand = new ApduCommand(
-      0x80,
-      0xa8,
-      0x00,
-      0x00,
-      pdolValue,
+    const getGpoApduResponse = await cardTransceive(
+      ApduCommand.getProcessingOptions(pdolValue),
     );
 
-    const getGpoApduResponse = new ApduResponse(
-      await nfcManager.isoDepHandler.transceive(
-        getGpoApduCommand.getForTransceive(),
-      ),
-    );
-
-    const gpo = TLV.parse(toHexString(getGpoApduResponse.data));
+    const gpo = getGpoApduResponse.getAsTlv();
 
     const afl = gpo.find('94').getValue();
 
@@ -140,26 +90,14 @@ export const useReadCard = () => {
         if (cardNumber && cardExpiration) {
           return;
         }
-
-        const getReadRecordApduCommand = new ApduCommand(
-          0x00,
-          0xb2,
-          record,
-          hexStringToByte(sfi)[0] + 4,
+        const getReadRecordApduResponse = await cardTransceive(
+          ApduCommand.readRecord(hexStringToByte(sfi)[0], record),
         );
 
-        const getReadRecordApduResponse = new ApduResponse(
-          await nfcManager.isoDepHandler.transceive(
-            getReadRecordApduCommand.getForTransceive(),
-          ),
-        );
+        const recordData = getReadRecordApduResponse.getAsTlv();
 
-        const recordResponse = TLV.parse(
-          toHexString(getReadRecordApduResponse.data),
-        );
-
-        cardNumber = recordResponse.find('5A');
-        cardExpiration = recordResponse.find('5F24');
+        cardNumber = recordData.find('5A');
+        cardExpiration = recordData.find('5F24');
 
         if (cardNumber) {
           console.log(cardNumber.getValue());
