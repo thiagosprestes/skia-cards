@@ -13,16 +13,14 @@ import {
   getCardBrand,
 } from '../../utils/cardBrands';
 
-export const CardForm = () => {
+interface CardFormProps {
+  onCancel(): void;
+}
+
+export const CardForm = ({onCancel}: CardFormProps) => {
   const [cardBrand, setCardBrand] = useState(CardBrand.default);
 
-  const {card, clearCardData, isFinishRead} = useContext(
-    CardContext,
-  ) as CardContextProps;
-
-  const {hasNfc, isNfcEnabled, verifyNfc, onReadNfc} = useNfc();
-
-  const hasNfcRequirements = hasNfc && isNfcEnabled;
+  const {card, clearCardData} = useContext(CardContext) as CardContextProps;
 
   const handleOnSubmit = () => {
     const isFormIncomplete =
@@ -79,16 +77,6 @@ export const CardForm = () => {
   };
 
   useEffect(() => {
-    verifyNfc();
-  }, []);
-
-  useEffect(() => {
-    if (hasNfcRequirements) {
-      onReadNfc();
-    }
-  }, [hasNfcRequirements, isFinishRead]);
-
-  useEffect(() => {
     const brand = getCardBrand(card.number!);
 
     if (brand) {
@@ -103,9 +91,6 @@ export const CardForm = () => {
     <ScrollView
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}>
-      {hasNfcRequirements && (
-        <Text style={styles.title}>Insira os dados ou aproxime um cartão</Text>
-      )}
       <View style={styles.container}>
         <CardFormItem title="Número" field={CardField.number} />
         <CardFormItem title="Nome do titular" field={CardField.holder} />
@@ -126,6 +111,7 @@ export const CardForm = () => {
         text="Salvar cartão"
         type={ButtonType.contained}
       />
+      <Button onPress={onCancel} text="Cenelar" type={ButtonType.outlined} />
     </ScrollView>
   );
 };

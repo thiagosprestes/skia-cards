@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 8,
+    marginTop: 16,
   },
   columns: {
     flexDirection: 'row',
