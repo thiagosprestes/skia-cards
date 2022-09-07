@@ -1,11 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useAnimatedStyle} from 'react-native-reanimated';
 import nfcManager from 'react-native-nfc-manager';
 import Snackbar from 'react-native-snackbar';
 import {Home, InsertNumber, State} from './Home/ui';
 import {CardContext, CardContextProps} from '../contexts/card';
 import {useNfc} from '../hooks/useNfc';
-import {useRotateCard} from '../hooks/useRotateCard';
 import {CardBrand, getCardBrand} from '../utils/cardBrands';
 
 export const HomeScreen = () => {
@@ -13,12 +11,19 @@ export const HomeScreen = () => {
 
   const [cardBrand, setCardBrand] = useState(CardBrand.default);
 
-  const {card, cardFrontPosition, cardBackPosition, flipCard, selectedField} =
-    useContext(CardContext) as CardContextProps;
+  const {
+    card,
+    cardFrontPosition,
+    cardBackPosition,
+    flipCard,
+    selectedField,
+    onGoToReadCard,
+    onGoToForm,
+    insertNumberType,
+    onResetSelectedInsertNumberType,
+  } = useContext(CardContext) as CardContextProps;
 
   const {hasNfc, verifyNfc, isLoadingNfcInfo} = useNfc();
-
-  const [insertNumberType, setInsertNumberType] = useState<InsertNumber>();
 
   const {number, expiration, holder, securityCode} = card;
 
@@ -33,11 +38,7 @@ export const HomeScreen = () => {
       return;
     }
 
-    setInsertNumberType(InsertNumber.nfc);
-  };
-
-  const onChangeInsertNumberType = (type?: InsertNumber) => {
-    setInsertNumberType(type ?? undefined);
+    onGoToReadCard();
   };
 
   useEffect(() => {
@@ -60,10 +61,10 @@ export const HomeScreen = () => {
       setState(State.default);
 
       if (!hasNfc) {
-        setInsertNumberType(InsertNumber.manual);
+        onGoToForm();
       }
     }
-  }, [hasNfc, isLoadingNfcInfo]);
+  }, [hasNfc, isLoadingNfcInfo, onGoToForm]);
 
   return (
     <Home
@@ -75,11 +76,12 @@ export const HomeScreen = () => {
       holder={holder}
       insertNumberType={insertNumberType}
       number={number}
-      onChangeInsertNumberType={onChangeInsertNumberType}
       onSelectNfc={onSelectNfc}
       securityCode={securityCode}
       state={state}
       selectedField={selectedField}
+      onResetSelectedInsertNumberType={onResetSelectedInsertNumberType}
+      onGoToForm={onGoToForm}
     />
   );
 };

@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
     height: 120,
     marginTop: 50,
   },
+  loading: {
+    flex: 1,
+  },
 });
 
 export default styles;

@@ -44,7 +44,8 @@ interface HomeProps {
   number?: number;
   securityCode?: number;
   onSelectNfc(): void;
-  onChangeInsertNumberType(type?: InsertNumber): void;
+  onResetSelectedInsertNumberType(): void;
+  onGoToForm(): void;
 }
 
 export const Home = ({
@@ -60,7 +61,8 @@ export const Home = ({
   securityCode,
   onSelectNfc,
   number,
-  onChangeInsertNumberType,
+  onResetSelectedInsertNumberType,
+  onGoToForm,
 }: HomeProps) => {
   const {gesture, rotateCardStyle} = useRotateCard();
 
@@ -97,9 +99,7 @@ export const Home = ({
               <Image style={styles.icon} source={nfcIcon} resizeMode="center" />
               <Text style={styles.buttonText}>Aproximação</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => onChangeInsertNumberType(InsertNumber.manual)}>
+            <TouchableOpacity style={styles.button} onPress={onGoToForm}>
               <Image
                 style={styles.icon}
                 source={formIcon}
@@ -112,10 +112,10 @@ export const Home = ({
       ) : (
         {
           [InsertNumber.nfc]: (
-            <TapOnPhone onCancelRead={() => onChangeInsertNumberType()} />
+            <TapOnPhone onCancelRead={onResetSelectedInsertNumberType} />
           ),
           [InsertNumber.manual]: (
-            <CardForm onCancel={() => onChangeInsertNumberType()} />
+            <CardForm onCancel={onResetSelectedInsertNumberType} />
           ),
         }[insertNumberType]
       )}
@@ -123,7 +123,7 @@ export const Home = ({
   );
 
   const renderLoading = (
-    <ActivityIndicator style={{flex: 1}} size={56} color="#000" />
+    <ActivityIndicator style={styles.loading} size={56} color="#000" />
   );
 
   return (

@@ -6,6 +6,7 @@ import {ApduResponse} from '../classes/ApduResponse';
 import {ApduCommand} from '../classes/ApduCommand';
 import {CardContext, CardContextProps, CardField} from '../contexts/card';
 import terminalTag from '../utils/terminalTag.json';
+import {MaskService} from 'react-native-masked-text';
 
 export function hexStringToByte(str: string): number[] {
   if (!str) {
@@ -101,9 +102,15 @@ export const useReadCard = () => {
 
         if (cardNumber) {
           console.log(cardNumber.getValue());
+
+          const applyMask = MaskService.toMask(
+            'credit-card',
+            cardNumber.getValue(),
+          );
+
           setCardFieldValue({
             field: CardField.number,
-            value: cardNumber.getValue(),
+            value: applyMask,
           });
         }
 

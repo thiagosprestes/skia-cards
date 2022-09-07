@@ -5,6 +5,7 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {InsertNumber} from '../screens/Home/ui';
 
 export enum CardPosition {
   FRONT = 'front',
@@ -42,6 +43,10 @@ export interface CardContextProps {
   flipCardToBack(): void;
   flipCard(): void;
   selectField(field: CardField): void;
+  onGoToForm(): void;
+  onGoToReadCard(): void;
+  onResetSelectedInsertNumberType(): void;
+  insertNumberType?: InsertNumber;
 }
 
 interface CardProps {
@@ -63,6 +68,7 @@ export const CardProvider = ({children}: CardProps) => {
   const [card, setCard] = useState<Card>(cardInitialState);
   const [selectedField, setSelectedField] = useState<CardField | null>();
   const [cardPosition, setCardPosition] = useState(CardPosition.FRONT);
+  const [insertNumberType, setInsertNumberType] = useState<InsertNumber>();
 
   const cardFrontPosition = useSharedValue('0deg');
   const cardBackPosition = useSharedValue('90deg');
@@ -147,6 +153,18 @@ export const CardProvider = ({children}: CardProps) => {
     }
   };
 
+  const onGoToForm = () => {
+    setInsertNumberType(InsertNumber.manual);
+  };
+
+  const onGoToReadCard = () => {
+    setInsertNumberType(InsertNumber.nfc);
+  };
+
+  const onResetSelectedInsertNumberType = () => {
+    setInsertNumberType(undefined);
+  };
+
   return (
     <CardContext.Provider
       value={{
@@ -161,6 +179,10 @@ export const CardProvider = ({children}: CardProps) => {
         flipCardToBack,
         flipCard,
         selectField,
+        onGoToForm,
+        onGoToReadCard,
+        insertNumberType,
+        onResetSelectedInsertNumberType,
       }}>
       {children}
     </CardContext.Provider>

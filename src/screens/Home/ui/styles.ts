@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 10,
   },
+  loading: {flex: 1},
 });
 
 export default styles;

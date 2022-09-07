@@ -1,8 +1,13 @@
 import {useContext, useEffect, useState} from 'react';
 import nfcManager, {NfcAdapter, NfcTech} from 'react-native-nfc-manager';
-import Snackbar from 'react-native-snackbar';
 import {CardContext, CardContextProps} from '../contexts/card';
 import {useReadCard} from './useReadCard';
+
+export enum ReadCard {
+  loading = 'loading',
+  default = 'default',
+  error = 'error',
+}
 
 interface HookReturn {
   hasNfc: boolean;
@@ -10,16 +15,19 @@ interface HookReturn {
   verifyNfc(): Promise<void>;
   onReadNfc(): Promise<void>;
   isLoadingNfcInfo: boolean;
-  isLoadingCardData: boolean;
+  readCardState: ReadCard;
+  onRetryCardRead(): void;
 }
 
 export const useNfc = (): HookReturn => {
   const [isLoadingNfcInfo, setIsLoadingNfcInfo] = useState(true);
-  const [isLoadingCardData, setIsCardData] = useState(false);
+  const [readCardState, setReadCardState] = useState(ReadCard.default);
   const [hasNfc, setHasNfc] = useState(false);
   const [isNfcEnabled, setIsNfcEnabled] = useState(false);
 
   const {getCardData} = useReadCard();
+
+  const {onGoToForm} = useContext(CardContext) as CardContextProps;
 
   const verifyNfc = async () => {
     setHasNfc(await nfcManager.isSupported());
@@ -40,24 +48,27 @@ export const useNfc = (): HookReturn => {
 
       const tag = await nfcManager.getTag();
 
-      setIsCardData(true);
+      setReadCardState(ReadCard.loading);
 
       await getCardData();
 
+      onGoToForm();
+
       console.log('Tag found', tag);
 
-      setIsCardData(false);
+      setReadCardState(ReadCard.default);
     } catch (ex) {
       console.log('Oops!', ex);
 
-      Snackbar.show({
-        text: 'Não foi possível ler os dados do cartão. Tente novamente',
-        duration: Snackbar.LENGTH_LONG,
-      });
+      setReadCardState(ReadCard.error);
     } finally {
       nfcManager.cancelTechnologyRequest();
-      setIsCardData(false);
     }
+  };
+
+  const onRetryCardRead = () => {
+    setReadCardState(ReadCard.default);
+    onReadNfc();
   };
 
   return {
@@ -66,6 +77,7 @@ export const useNfc = (): HookReturn => {
     verifyNfc,
     onReadNfc,
     isLoadingNfcInfo,
-    isLoadingCardData,
+    readCardState,
+    onRetryCardRead,
   };
 };
