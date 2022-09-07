@@ -53,8 +53,6 @@ export const CardForm = ({onCancel}: CardFormProps) => {
         !isExpirationYearValid ||
         (currentMonth >= expirationMonth && !isExpirationYearValid);
 
-      console.log(expirationMonth);
-
       if (!isValidMonth) {
         Snackbar.show({
           text: 'Insira uma data de expiração válida',
@@ -111,7 +109,7 @@ export const CardForm = ({onCancel}: CardFormProps) => {
         text="Salvar cartão"
         type={ButtonType.contained}
       />
-      <Button onPress={onCancel} text="Cenelar" type={ButtonType.outlined} />
+      <Button onPress={onCancel} text="Cancelar" type={ButtonType.outlined} />
     </ScrollView>
   );
 };

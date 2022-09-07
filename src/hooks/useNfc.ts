@@ -1,5 +1,6 @@
 import {useContext, useEffect, useState} from 'react';
 import nfcManager, {NfcAdapter, NfcTech} from 'react-native-nfc-manager';
+import Snackbar from 'react-native-snackbar';
 import {CardContext, CardContextProps} from '../contexts/card';
 import {useReadCard} from './useReadCard';
 
@@ -8,26 +9,27 @@ interface HookReturn {
   isNfcEnabled: boolean;
   verifyNfc(): Promise<void>;
   onReadNfc(): Promise<void>;
+  isLoadingNfcInfo: boolean;
+  isLoadingCardData: boolean;
 }
 
 export const useNfc = (): HookReturn => {
+  const [isLoadingNfcInfo, setIsLoadingNfcInfo] = useState(true);
+  const [isLoadingCardData, setIsCardData] = useState(false);
   const [hasNfc, setHasNfc] = useState(false);
   const [isNfcEnabled, setIsNfcEnabled] = useState(false);
-
-  const {toggleNfcRead} = useContext(CardContext) as CardContextProps;
 
   const {getCardData} = useReadCard();
 
   const verifyNfc = async () => {
     setHasNfc(await nfcManager.isSupported());
     setIsNfcEnabled(await nfcManager.isEnabled());
+
+    setIsLoadingNfcInfo(false);
   };
 
   const onReadNfc = async () => {
     try {
-      await nfcManager.cancelTechnologyRequest();
-      // register for the NFC tag with NDEF in it
-      console.log('starting request');
       await nfcManager.requestTechnology(NfcTech.IsoDep, {
         isReaderModeEnabled: true,
         readerModeDelay: 1000,
@@ -35,18 +37,35 @@ export const useNfc = (): HookReturn => {
         readerModeFlags:
           NfcAdapter.FLAG_READER_NFC_A + NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
       });
-      // the resolved tag object will contain `ndefMessage` property
+
       const tag = await nfcManager.getTag();
+
+      setIsCardData(true);
 
       await getCardData();
 
       console.log('Tag found', tag);
+
+      setIsCardData(false);
     } catch (ex) {
       console.log('Oops!', ex);
-    }
 
-    toggleNfcRead();
+      Snackbar.show({
+        text: 'Não foi possível ler os dados do cartão. Tente novamente',
+        duration: Snackbar.LENGTH_LONG,
+      });
+    } finally {
+      nfcManager.cancelTechnologyRequest();
+      setIsCardData(false);
+    }
   };
 
-  return {hasNfc, isNfcEnabled, verifyNfc, onReadNfc};
+  return {
+    hasNfc,
+    isNfcEnabled,
+    verifyNfc,
+    onReadNfc,
+    isLoadingNfcInfo,
+    isLoadingCardData,
+  };
 };
