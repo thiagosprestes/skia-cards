@@ -34,7 +34,7 @@ Skia é uma lib que permite a renderização de gráficos de alta performance 2D
 
 A ideia inicial do projeto era somente fazer um form para preenchimento dinamico de dados de um cartão, esse cartão é inteiramente desenhado com skia e suas animações são feitas com react native reanimated.
 
-Durante o desenvolvimento do projeto o @rbressans deu a ideia de adicionar a leitura de cartões via antena NFC do dispositivo, assim preenchendo o número e data de expiração do cartão automaticamente, sem a necessidade de digitação.
+Durante o desenvolvimento do projeto o <a href="https://github.com/rBressans">rBressans</a> deu a ideia de adicionar a leitura de cartões via antena NFC do dispositivo, assim preenchendo o número e data de expiração do cartão automaticamente, sem a necessidade de digitação.
 
 ### 🎶 Funcionalidades
 
