@@ -47,7 +47,7 @@ Durante o desenvolvimento do projeto o <a href="https://github.com/rBressans">rB
 - 🎨 **React Native Skia** - Desenho do cartão
 - 🎇 **React Native Reanimated** - Animações do cartão
 - 💳 **React Native NFC Manager** - Leitura de cartão através da antena NFC
-- 💻 **Node TLV** Leitura de dados codificados
+- 💻 **Node TLV** - Leitura de dados codificados
 - 💭 **React Native Snackbar** - Mensagens de validação do form
 
 ## 🚀 Rodando o projeto
