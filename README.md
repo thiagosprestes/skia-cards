@@ -36,7 +36,7 @@ A ideia inicial do projeto era somente fazer um form para preenchimento dinamico
 
 Durante o desenvolvimento do projeto o <a href="https://github.com/rBressans">rBressans</a> deu a ideia de adicionar a leitura de cartões via antena NFC do dispositivo, assim preenchendo o número e data de expiração do cartão automaticamente, sem a necessidade de digitação.
 
-### 🎶 Funcionalidades
+### 💳 Funcionalidades
 
 - Preencher dados do cartão no form
 - Ler cartões através da antena NFC
