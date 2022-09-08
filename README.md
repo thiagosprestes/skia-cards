@@ -24,7 +24,8 @@ App desenvolvido para aprender sobre skia e como integrar ele com o React Native
 
 ## 🎨 Telas
 
-<img src=".github/soundfy-figma.png" alt="soundfy">
+<img src=".github/visa.gif" />
+<img src=".github/elo.gif" />
 
 ## 📃 Sobre o projeto
 
