@@ -20,7 +20,7 @@ App desenvolvido para aprender sobre skia e como integrar ele com o React Native
 - [Tecnologias utilizadas](#-Tecnologias-utilizadas)
 - [Rodando o projeto](#-Rodando-o-projeto)
   - [Pré-requisitos](#-Pré-requisitos)
-  - [Rodando a auth-api](#-Rodando-o-app)
+  - [Rodando o app](#-Rodando-o-app)
 
 ## 🎨 Telas
 
