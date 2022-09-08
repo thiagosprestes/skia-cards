@@ -12,6 +12,7 @@ import {
   cardBrandsColors,
   getCardBrand,
 } from '../../utils/cardBrands';
+import nfcManager from 'react-native-nfc-manager';
 
 interface CardFormProps {
   onCancel(): void;
@@ -19,6 +20,8 @@ interface CardFormProps {
 
 export const CardForm = ({onCancel}: CardFormProps) => {
   const [cardBrand, setCardBrand] = useState(CardBrand.default);
+
+  const {hasNfc, verifyNfc} = useNfc();
 
   const {card, clearCardData} = useContext(CardContext) as CardContextProps;
 
@@ -75,6 +78,10 @@ export const CardForm = ({onCancel}: CardFormProps) => {
   };
 
   useEffect(() => {
+    verifyNfc();
+  }, [verifyNfc]);
+
+  useEffect(() => {
     const brand = getCardBrand(card.number!);
 
     if (brand) {
@@ -109,7 +116,9 @@ export const CardForm = ({onCancel}: CardFormProps) => {
         text="Salvar cartão"
         type={ButtonType.contained}
       />
+      {/* {hasNfc && ( */}
       <Button onPress={onCancel} text="Cancelar" type={ButtonType.outlined} />
+      {/* )} */}
     </ScrollView>
   );
 };

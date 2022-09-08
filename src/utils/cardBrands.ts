@@ -23,11 +23,11 @@ export const cardBrandsRegex: CardBrandRegex = {
 
 export const cardBrandsColors = {
   visa: ['#122D96', '#1A1E5D'],
-  mastercard: ['#F7A02D', '#F58627'],
+  mastercard: ['#303030', '#050505'],
   nubank: ['#9336BE', '#6D0B8A'],
   amex: ['#86D8B5', '#449E79'],
   hipercard: ['#C21D22', '#9A171B'],
-  elo: ['#88847E', '#38322E'],
+  elo: ['#0BA4DF', '#187ca0'],
   default: ['#3e4141', '#202323'],
 };
 
