@@ -90,7 +90,7 @@ yarn android
 
 ```
 
-Após concluir a instalação do App, execute o seguinte comando para executar o app
+Após concluir a instalação, execute o seguinte comando para rodar o app
 
 ```bash
 
