@@ -116,9 +116,9 @@ export const CardForm = ({onCancel}: CardFormProps) => {
         text="Salvar cartão"
         type={ButtonType.contained}
       />
-      {/* {hasNfc && ( */}
-      <Button onPress={onCancel} text="Cancelar" type={ButtonType.outlined} />
-      {/* )} */}
+      {hasNfc && (
+        <Button onPress={onCancel} text="Cancelar" type={ButtonType.outlined} />
+      )}
     </ScrollView>
   );
 };
