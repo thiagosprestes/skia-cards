@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     width: 270,
   },
   content: {
+    justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
   },
@@ -23,7 +24,29 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   loading: {
-    flex: 1,
+    position: 'absolute',
+    top: -80,
+    left: 0,
+    right: 0,
+  },
+  smartphoneContainer: {
+    zIndex: 1,
+  },
+  smartphone: {
+    width: 80,
+    height: 140,
+    backgroundColor: '#F2F2F4',
+  },
+  card: {
+    height: 130,
+    position: 'absolute',
+  },
+  error: {
+    height: 40,
+    width: 40,
+    position: 'absolute',
+    top: 50,
+    left: 20,
   },
 });
 
