@@ -1,20 +1,12 @@
 import React, {useEffect} from 'react';
 import {
   Canvas,
-  Image,
   LinearGradient,
   RoundedRect,
-  useImage,
   useSharedValueEffect,
   useValue,
   vec,
 } from '@shopify/react-native-skia';
-import {Dimensions} from 'react-native';
-import visa from '../../assets/brands/visa.png';
-import amex from '../../assets/brands/amex.png';
-import mastercard from '../../assets/brands/mastercard.png';
-import elo from '../../assets/brands/elo.png';
-import hipercard from '../../assets/brands/hipercard.png';
 import {CardBrand, cardBrandsColors} from '../../utils/cardBrands';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
 
@@ -27,51 +19,24 @@ export const Card = ({children, cardBrand}: CardProps) => {
   const width = 85.6 * 4;
   const height = 53.98 * 4;
 
-  const visaLogo = useImage(visa);
-  const amexLogo = useImage(amex);
-  const mastercardLogo = useImage(mastercard);
-  const hipercardLogo = useImage(hipercard);
-  const eloLogo = useImage(elo);
-
-  const cardData = {
-    default: {colors: cardBrandsColors.default, logo: undefined},
-    amex: {colors: cardBrandsColors.amex, logo: amexLogo},
-    visa: {colors: cardBrandsColors.visa, logo: visaLogo},
-    mastercard: {colors: cardBrandsColors.mastercard, logo: mastercardLogo},
-    nubank: {colors: cardBrandsColors.nubank, logo: mastercardLogo},
-    elo: {colors: cardBrandsColors.elo, logo: eloLogo},
-    hipercard: {colors: cardBrandsColors.hipercard, logo: hipercardLogo},
-  };
-
   const cardOpacity = useValue(0);
-  const logoOpacity = useValue(0);
 
   const cardOpacityReanimated = useSharedValue(0);
-  const logoOpacityReanimated = useSharedValue(0);
 
   useEffect(() => {
     if (cardBrand === CardBrand.default) {
       cardOpacityReanimated.value = withTiming(0);
-      logoOpacityReanimated.value = withTiming(0);
       return;
     }
 
-    logoOpacityReanimated.value = withTiming(1, {
-      duration: 300,
-    });
     cardOpacityReanimated.value = withTiming(1, {
       duration: 400,
     });
-  }, [cardBrand, cardOpacityReanimated, logoOpacityReanimated]);
+  }, [cardBrand, cardOpacityReanimated]);
 
-  useSharedValueEffect(
-    () => {
-      cardOpacity.current = cardOpacityReanimated.value;
-      logoOpacity.current = logoOpacityReanimated.value;
-    },
-    cardOpacityReanimated,
-    logoOpacityReanimated,
-  );
+  useSharedValueEffect(() => {
+    cardOpacity.current = cardOpacityReanimated.value;
+  }, cardOpacityReanimated);
 
   return (
     <>
@@ -80,7 +45,7 @@ export const Card = ({children, cardBrand}: CardProps) => {
           <LinearGradient
             start={vec(0, 0)}
             end={vec(256, 256)}
-            colors={cardData.default.colors}
+            colors={cardBrandsColors.default}
           />
         </RoundedRect>
         <RoundedRect
@@ -93,19 +58,10 @@ export const Card = ({children, cardBrand}: CardProps) => {
           <LinearGradient
             start={vec(0, 0)}
             end={vec(256, 256)}
-            colors={cardData[cardBrand].colors}
+            colors={cardBrandsColors[cardBrand]}
           />
         </RoundedRect>
-        {cardData[cardBrand].logo && (
-          <Image
-            image={cardData[cardBrand].logo!}
-            x={width - 100}
-            y={0}
-            width={80}
-            height={80}
-            opacity={logoOpacity}
-          />
-        )}
+
         {children}
       </Canvas>
     </>

@@ -139,6 +139,7 @@ export const Home = ({
                     cardExpiration={expiration}
                     cardHolder={holder}
                     selectedField={selectedField}
+                    cardBrand={cardBrand}
                   />
                 </Card>
               </Animated.View>
