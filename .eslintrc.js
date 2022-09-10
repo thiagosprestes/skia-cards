@@ -8,6 +8,7 @@ module.exports = {
       files: ['*.ts', '*.tsx'],
       rules: {
         '@typescript-eslint/no-unused-vars': ['off'],
+        'react-hooks/exhaustive-deps': ['off'],
         'no-shadow': 'off',
         'no-undef': 'off',
         'prettier/prettier': [

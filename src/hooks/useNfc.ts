@@ -25,6 +25,8 @@ export const useNfc = (): HookReturn => {
   const [hasNfc, setHasNfc] = useState(false);
   const [isNfcEnabled, setIsNfcEnabled] = useState(false);
 
+  nfcManager.start();
+
   const {getCardData} = useReadCard();
 
   const {onGoToForm} = useContext(CardContext) as CardContextProps;
