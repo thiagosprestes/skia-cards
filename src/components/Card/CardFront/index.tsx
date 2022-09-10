@@ -17,6 +17,7 @@ import amex from '../../../assets/brands/amex.png';
 import mastercard from '../../../assets/brands/mastercard.png';
 import elo from '../../../assets/brands/elo.png';
 import hipercard from '../../../assets/brands/hipercard.png';
+import nfc from '../../../assets/nfc.png';
 import {CardBrand} from '../../../utils/cardBrands';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
 
@@ -26,6 +27,7 @@ interface CardFront {
   cardHolder?: string;
   selectedField?: CardField | null;
   cardBrand: CardBrand;
+  hasNfc: boolean;
 }
 
 export const CardFront = ({
@@ -34,6 +36,7 @@ export const CardFront = ({
   cardHolder,
   selectedField,
   cardBrand,
+  hasNfc,
 }: CardFront) => {
   const fontBold = useFont(RobotoBold, 16);
 
@@ -43,12 +46,15 @@ export const CardFront = ({
   const mastercardLogo = useImage(mastercard);
   const hipercardLogo = useImage(hipercard);
   const eloLogo = useImage(elo);
+  const nfcLogo = useImage(nfc);
 
   const logoOpacity = useValue(0);
+  const nfcOpacity = useValue(0);
 
   const width = 85.6 * 4;
 
   const logoOpacityReanimated = useSharedValue(0);
+  const nfcOpacityReanimated = useSharedValue(0);
 
   const cardData = {
     default: undefined,
@@ -66,14 +72,27 @@ export const CardFront = ({
       return;
     }
 
+    if (hasNfc) {
+      nfcOpacityReanimated.value = withTiming(1, {
+        duration: 300,
+      });
+    } else {
+      nfcOpacityReanimated.value = withTiming(0);
+    }
+
     logoOpacityReanimated.value = withTiming(1, {
       duration: 300,
     });
   }, [cardBrand, logoOpacityReanimated]);
 
-  useSharedValueEffect(() => {
-    logoOpacity.current = logoOpacityReanimated.value;
-  }, logoOpacityReanimated);
+  useSharedValueEffect(
+    () => {
+      logoOpacity.current = logoOpacityReanimated.value;
+      nfcOpacity.current = nfcOpacityReanimated.value;
+    },
+    logoOpacityReanimated,
+    nfcOpacityReanimated,
+  );
 
   if (!fontBold) {
     return <></>;
@@ -89,6 +108,14 @@ export const CardFront = ({
         color="#fff"
       />
       <Image image={chip!} x={20} y={40} width={50} height={50} />
+      <Image
+        image={nfcLogo!}
+        x={80}
+        y={52}
+        height={25}
+        width={25}
+        opacity={nfcOpacity}
+      />
       {selectedField === CardField.number && (
         <Rect height={2} width={220} color="#fff" x={20} y={130} />
       )}

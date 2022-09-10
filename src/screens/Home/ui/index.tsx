@@ -46,6 +46,7 @@ interface HomeProps {
   onSelectNfc(): void;
   onResetSelectedInsertNumberType(): void;
   onGoToForm(): void;
+  hasNfc: boolean;
 }
 
 export const Home = ({
@@ -63,6 +64,7 @@ export const Home = ({
   number,
   onResetSelectedInsertNumberType,
   onGoToForm,
+  hasNfc,
 }: HomeProps) => {
   const {gesture, rotateCardStyle} = useRotateCard();
 
@@ -140,6 +142,7 @@ export const Home = ({
                     cardHolder={holder}
                     selectedField={selectedField}
                     cardBrand={cardBrand}
+                    hasNfc={hasNfc}
                   />
                 </Card>
               </Animated.View>

@@ -18,10 +18,11 @@ interface CardFormItemProps {
 
 export const CardFormItem = ({title, field}: CardFormItemProps) => {
   const {
-    card: {number, holder, expiration, securityCode},
+    card: {number, holder, expiration, securityCode, hasNfc},
     setCardFieldValue,
     selectField,
     selectedField,
+    setCardHasNfc,
   } = useContext(CardContext) as CardContextProps;
 
   return (
@@ -37,6 +38,10 @@ export const CardFormItem = ({title, field}: CardFormItemProps) => {
                 selectedField === CardField.number && styles.focusedInput,
               ]}
               onChangeText={text => {
+                if (hasNfc) {
+                  setCardHasNfc(false);
+                }
+
                 setCardFieldValue({
                   field,
                   value: text,

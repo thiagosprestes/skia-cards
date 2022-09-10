@@ -24,6 +24,7 @@ interface Card {
   expiration?: string;
   holder?: string;
   securityCode?: number;
+  hasNfc: boolean;
 }
 
 interface setCardFieldValueProps {
@@ -47,6 +48,7 @@ export interface CardContextProps {
   onGoToReadCard(): void;
   onResetSelectedInsertNumberType(): void;
   insertNumberType?: InsertNumber;
+  setCardHasNfc(hasNfc: boolean): void;
 }
 
 interface CardProps {
@@ -63,6 +65,7 @@ export const CardProvider = ({children}: CardProps) => {
     expiration: undefined,
     holder: undefined,
     securityCode: undefined,
+    hasNfc: false,
   };
 
   const [card, setCard] = useState<Card>(cardInitialState);
@@ -125,6 +128,13 @@ export const CardProvider = ({children}: CardProps) => {
     }));
   };
 
+  const setCardHasNfc = (hasNfc: boolean) => {
+    setCard(oldState => ({
+      ...oldState,
+      hasNfc,
+    }));
+  };
+
   const clearCardData = () => {
     if (cardPosition === CardPosition.BACK) {
       flipCardToFront();
@@ -183,6 +193,7 @@ export const CardProvider = ({children}: CardProps) => {
         onGoToReadCard,
         insertNumberType,
         onResetSelectedInsertNumberType,
+        setCardHasNfc,
       }}>
       {children}
     </CardContext.Provider>

@@ -25,7 +25,7 @@ export const HomeScreen = () => {
 
   const {hasNfc, verifyNfc, isLoadingNfcInfo} = useNfc();
 
-  const {number, expiration, holder, securityCode} = card;
+  const {number, expiration, holder, securityCode, hasNfc: cardHasNfc} = card;
 
   const onSelectNfc = async () => {
     const isNfcEnabled = await nfcManager.isEnabled();
@@ -82,6 +82,7 @@ export const HomeScreen = () => {
       selectedField={selectedField}
       onResetSelectedInsertNumberType={onResetSelectedInsertNumberType}
       onGoToForm={onGoToForm}
+      hasNfc={cardHasNfc}
     />
   );
 };

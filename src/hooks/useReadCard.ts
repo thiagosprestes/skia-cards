@@ -29,7 +29,9 @@ export function toHexString(value: number[]) {
 }
 
 export const useReadCard = () => {
-  const {setCardFieldValue} = useContext(CardContext) as CardContextProps;
+  const {setCardFieldValue, setCardHasNfc} = useContext(
+    CardContext,
+  ) as CardContextProps;
 
   const cardTransceive = async (
     command: ApduCommand,
@@ -112,6 +114,8 @@ export const useReadCard = () => {
             field: CardField.number,
             value: applyMask,
           });
+
+          setCardHasNfc(true);
         }
 
         if (cardExpiration) {
