@@ -24,7 +24,7 @@ App desenvolvido para aprender sobre skia e como integrar ele com o React Native
 
 ## 🎨 Telas
 
-<img src=".github/visa.gif" width="200" />. <img src=".github/elo.gif" width="200" />
+<img src=".github/home.png" width="200" /> <img src=".github/form.png" width="200" /> <img src=".github/back.png" width="200" /> <img src=".github/form_with_card.png" width="200" /> <img src=".github/add_card.gif" width="200" /> <img src=".github/wait_card.gif" width="200" />
 
 ## 📃 Sobre o projeto
 
